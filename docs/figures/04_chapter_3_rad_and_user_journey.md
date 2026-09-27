@@ -114,7 +114,7 @@ flowchart TD
     REPEAT(["Repeat for the next frame"])
 
     OCR_OUT["Reads the text aloud<br/>(English / Filipino)"]
-    BUDDY_OUT["Answers by voice:<br/>Gemma 2B on the phone (English)<br/>or Gemini online (Filipino)"]
+    BUDDY_OUT["Answers by voice:<br/>Gemma 2B on the phone (Local AI mode, default)<br/>or Gemini online (online mode, chosen by the user)"]
     NAV_OUT["Speaks turn-by-turn steps and<br/>alerts the user near each turn (GPS)"]
 
     COUNT{"Cancelled within<br/>5 seconds?"}

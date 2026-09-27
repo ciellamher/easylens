@@ -15,7 +15,7 @@
 Figure 3.11
 EasyLens System Architecture and Detailed UML Sequence Diagram
 
-Note. Figure 3.11 shows the EasyLens system architecture as a unified modeling language (UML) sequence diagram: connecting the smart glasses over their local Wi-Fi network, the Navigation-mode hazard-warning loop using Google ML Kit on the phone, Buddy's question-and-answer flow (Gemma 2B on the phone for English, Google Gemini online for Filipino), and the Emergency SOS flow.
+Note. Figure 3.11 shows the EasyLens system architecture as a unified modeling language (UML) sequence diagram: connecting the smart glasses over their local Wi-Fi network, the Navigation-mode hazard-warning loop using Google ML Kit on the phone, Buddy's question-and-answer flow (Gemma 2B on the phone in Local AI mode, the default, or Google Gemini online when the user chooses online mode), and the Emergency SOS flow.
 ```
 
 ---
@@ -60,9 +60,9 @@ sequenceDiagram
         note over User, Gemini: Talking to Buddy
         User->>App: Spoken question
         App->>App: Speech-to-text and knowledge-base search (TF-IDF)
-        alt English
+        alt Local AI mode (default)
             App->>App: Answer with Gemma 2B on the phone (offline)
-        else Filipino
+        else Online mode (chosen by the user)
             App->>Gemini: Question with context
             Gemini-->>App: Answer
         end
