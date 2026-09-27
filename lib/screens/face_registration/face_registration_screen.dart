@@ -272,6 +272,8 @@ class _FaceRegistrationScreenState extends State<FaceRegistrationScreen>
   Size _imageSize = Size.zero;
   bool _isDetecting = false;
   String _errorMessage = '';
+  // Set when the user confirms they have the person's permission; required before saving.
+  DateTime? _consentGivenAt;
 
   final _nameController = TextEditingController();
   final _picker = ImagePicker();
@@ -438,6 +440,17 @@ class _FaceRegistrationScreenState extends State<FaceRegistrationScreen>
     }
   }
 
+  /// Shows a prompt and returns false if the consent checkbox has not been ticked.
+  bool _ensureConsent() {
+    if (_consentGivenAt != null) return true;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Please confirm you have this person's permission first."),
+      ),
+    );
+    return false;
+  }
+
   // ── Save profile ──────────────────────────────────────────────────────
   Future<void> _saveProfile() async {
     final name = _nameController.text.trim();
@@ -447,6 +460,7 @@ class _FaceRegistrationScreenState extends State<FaceRegistrationScreen>
       );
       return;
     }
+    if (!_ensureConsent()) return;
 
     // Extract features from all captured samples
     final allSamples = <List<double>>[];
@@ -473,6 +487,7 @@ class _FaceRegistrationScreenState extends State<FaceRegistrationScreen>
       faceFeatures: primaryFeatures,
       multiSampleFeatures: allSamples.length > 1 ? allSamples : null,
       registeredAt: DateTime.now(),
+      consentGivenAt: _consentGivenAt,
     );
     await FaceRegistrationService().saveProfile(profile);
     if (!mounted) return;
@@ -488,6 +503,7 @@ class _FaceRegistrationScreenState extends State<FaceRegistrationScreen>
       );
       return;
     }
+    if (!_ensureConsent()) return;
 
     List<double>? features;
     if (_detectedFaces.isNotEmpty) {
@@ -500,6 +516,7 @@ class _FaceRegistrationScreenState extends State<FaceRegistrationScreen>
       imageLocalPath: _pickedImage?.path,
       faceFeatures: features,
       registeredAt: DateTime.now(),
+      consentGivenAt: _consentGivenAt,
     );
     await FaceRegistrationService().saveProfile(profile);
     if (!mounted) return;
@@ -867,6 +884,36 @@ class _FaceRegistrationScreenState extends State<FaceRegistrationScreen>
             textCapitalization: TextCapitalization.words,
           ),
         ),
+        const SizedBox(height: 12),
+        // Consent confirmation (required before any face data is saved)
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.lightBackground,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.cardBorder.withValues(alpha: 0.4)),
+          ),
+          child: CheckboxListTile(
+            value: _consentGivenAt != null,
+            onChanged: (checked) {
+              setState(() {
+                _consentGivenAt = checked == true ? DateTime.now() : null;
+              });
+            },
+            activeColor: AppColors.primaryButton,
+            controlAffinity: ListTileControlAffinity.leading,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: Text(
+              "I have this person's permission to save their face data and recognize them.",
+              style: GoogleFonts.inter(
+                  color: AppColors.primaryText, fontSize: 14, fontWeight: FontWeight.w600),
+            ),
+            subtitle: Text(
+              'Face data stays on this phone. You can delete it anytime from Registered Faces.',
+              style: GoogleFonts.inter(color: AppColors.textMuted, fontSize: 12),
+            ),
+          ),
+        ),
         const SizedBox(height: 20),
         // Multi-angle capture button (recommended)
         _GlassButton(
@@ -881,6 +928,7 @@ class _FaceRegistrationScreenState extends State<FaceRegistrationScreen>
               );
               return;
             }
+            if (!_ensureConsent()) return;
             // Store first capture
             _capturedImages.clear();
             _capturedFaces.clear();
@@ -911,6 +959,7 @@ class _FaceRegistrationScreenState extends State<FaceRegistrationScreen>
               _pickedImage = null;
               _detectedFaces = [];
               _nameController.clear();
+              _consentGivenAt = null;
               _errorMessage = '';
             });
           },
@@ -1126,6 +1175,7 @@ class _FaceRegistrationScreenState extends State<FaceRegistrationScreen>
               _capturedImageSizes.clear();
               _currentCaptureIndex = 0;
               _nameController.clear();
+              _consentGivenAt = null;
               _errorMessage = '';
             });
           },

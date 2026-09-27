@@ -14,6 +14,9 @@ class FaceProfile {
   final List<List<double>>? multiSampleFeatures;
   final DateTime registeredAt;
   final String? userId;
+  /// When the user confirmed they have this person's permission to store their face data.
+  /// Null for profiles registered before consent was required.
+  final DateTime? consentGivenAt;
 
   FaceProfile({
     required this.id,
@@ -23,6 +26,7 @@ class FaceProfile {
     this.multiSampleFeatures,
     required this.registeredAt,
     this.userId,
+    this.consentGivenAt,
   });
 
   Map<String, dynamic> toJson() => {
@@ -33,6 +37,7 @@ class FaceProfile {
         'multiSampleFeatures': multiSampleFeatures,
         'registeredAt': registeredAt.toIso8601String(),
         'userId': userId,
+        'consentGivenAt': consentGivenAt?.toIso8601String(),
       };
 
   factory FaceProfile.fromJson(Map<String, dynamic> json) => FaceProfile(
@@ -49,6 +54,9 @@ class FaceProfile {
             .toList(),
         registeredAt: DateTime.parse(json['registeredAt'] as String),
         userId: json['userId'] as String?,
+        consentGivenAt: json['consentGivenAt'] != null
+            ? DateTime.parse(json['consentGivenAt'] as String)
+            : null,
       );
 
   /// Returns all available feature vectors for matching (multi-sample first, fallback to single).
@@ -105,6 +113,7 @@ class FaceRegistrationService extends ChangeNotifier {
       faceFeatures: profile.faceFeatures,
       registeredAt: profile.registeredAt,
       userId: profile.userId ?? activeUid,
+      consentGivenAt: profile.consentGivenAt,
     );
 
     final profiles = await getAllProfiles();
@@ -146,6 +155,7 @@ class FaceRegistrationService extends ChangeNotifier {
               faceFeatures: prof.faceFeatures,
               registeredAt: prof.registeredAt,
               userId: activeUid,
+              consentGivenAt: prof.consentGivenAt,
             );
             migratedList.add(jsonEncode(adoptProf.toJson()));
           }

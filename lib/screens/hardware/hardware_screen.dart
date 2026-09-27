@@ -846,6 +846,7 @@ class _HardwareScreenState extends State<HardwareScreen> with WidgetsBindingObse
                   multiSampleFeatures: prof.multiSampleFeatures,
                   registeredAt: prof.registeredAt,
                   userId: prof.userId,
+                  consentGivenAt: prof.consentGivenAt,
                 );
                 await FaceRegistrationService().saveProfile(updatedProf);
                 profiles[i] = updatedProf;
