@@ -82,7 +82,7 @@ Note. Figure 3.2 shows the six CRISP-DM phases followed to develop the custom 24
 ```mermaid
 %%{init: {"flowchart": {"wrappingWidth": 330, "nodeSpacing": 40, "rankSpacing": 55}}}%%
 flowchart TD
-    BU["<b>1. Business Understanding</b><br/>• Recognize common pedestrian hazards for visually impaired users<br/>• Low-cost wearable: ESP32-CAM glasses paired with a smartphone"]
+    BU["<b>1. Business Understanding</b><br/>• Recognize common pedestrian hazards for visually impaired users<br/>• Low-cost wearable: ESP32-CAM glasses connected to a smartphone"]
 
     DU["<b>2. Data Understanding</b><br/>• Kaggle obstacle dataset (Gobara), 30 classes<br/>• Found duplicate labels (person / Person), severe class imbalance and near-empty 'ghost' classes"]
 
@@ -90,7 +90,7 @@ flowchart TD
 
     M["<b>4. Modeling</b><br/>• MobileNetV2 backbone (ImageNet weights) + Dense 512 → Dense 256 → Softmax (24 classes)<br/>• Four training phases, unfreezing progressively more layers (Adam, learning rate 5e-4 → 1e-5 → 5e-6 → 1e-7)<br/>• Early stopping and learning-rate reduction on plateau<br/>• Trained in Google Colab (NVIDIA T4 GPU)"]
 
-    EV["<b>5. Evaluation</b> (test set, 2,125 images)<br/>• Top-1 accuracy 85.55%<br/>• Weighted precision 86.63%, recall 85.55%, F1-score 85.49%<br/>• GPU batch throughput 2.48 ms per image (offline, T4)"]
+    EV["<b>5. Evaluation</b> (held-out test set, 2,125 images)<br/>• Top-1, Top-2 and Top-3 accuracy<br/>• Balanced accuracy<br/>• Weighted precision, recall and F1-score<br/>• Inference time (GPU, offline)"]
 
     DEP["<b>6. Deployment</b><br/>• Final model saved in Keras format (.keras)<br/>• Not yet converted to TFLite or integrated into Buddy (see Recommendations)"]
 

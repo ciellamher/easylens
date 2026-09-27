@@ -15,7 +15,7 @@
 Figure 4.1
 The Multi-Phase Transfer Learning and Unfreezing Workflow for the MobileNetV2 Classifier
 
-Note. Figure 4.1 shows the four-phase transfer learning workflow used in Google Colab to train the custom 24-class MobileNetV2 image classifier, from training a new classifier head on a frozen ImageNet backbone to fine-tuning all layers at very low learning rates. The final model reached 85.55% Top-1 accuracy on 2,125 test images and was saved in Keras format; it was not converted to TFLite or integrated into Buddy.
+Note. Figure 4.1 shows the four-phase transfer learning workflow used in Google Colab to train the custom 24-class MobileNetV2 image classifier, from training a new classifier head on a frozen ImageNet backbone to fine-tuning all layers at very low learning rates, followed by evaluation on the held-out test set. The final model was saved in Keras format; it was not converted to TFLite or integrated into Buddy.
 ```
 
 ---
@@ -31,11 +31,11 @@ flowchart TD
 
     P2["<b>Phase 2: Unfreeze the top 30 backbone layers</b><br/>Adam, learning rate 1e-5 · stopped early after 8 epochs (maximum 50)"]
 
-    P3["<b>Phase 3: Unfreeze all layers</b><br/>Adam, learning rate 5e-6 · maximum 150 epochs (epoch count not recorded)<br/>Test accuracy after Phase 3: 85.47%"]
+    P3["<b>Phase 3: Unfreeze all layers</b><br/>Adam, learning rate 5e-6 · maximum 150 epochs (epoch count not recorded)"]
 
     P4["<b>Phase 4: Continue from the Phase 3 model</b><br/>All layers, Adam, learning rate 1e-7 · stopped early after 21 epochs (maximum 200)"]
 
-    EVAL["<b>Final evaluation</b> (2,125 test images)<br/>Top-1 accuracy 85.55% · weighted precision 86.63%, recall 85.55%, F1-score 85.49%"]
+    EVAL["<b>Final evaluation</b> (held-out test set, 2,125 images)<br/>Top-1/2/3 accuracy, balanced accuracy, weighted precision, recall and F1-score"]
 
     SAVE["<b>Output</b><br/>Saved in Keras format (.keras)<br/>Not converted to TFLite or integrated into Buddy"]
 
