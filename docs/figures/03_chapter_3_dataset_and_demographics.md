@@ -182,23 +182,24 @@ pie title Expert Primary Technical Domains (N = 5)
 - **Figure Title**: *Vision Dataset Foundations Comparison (Google OpenImages vs. Custom EasyLens Dataset)*
 - **Manuscript Page**: 85
 - **PDF Page**: 92
-- **Image Asset**: [fig_3_8_dataset_foundations_comparison.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_8_dataset_foundations_comparison.png)
+- **Image Asset**: [fig_dataset_foundations_comparison.png](assets/fig_dataset_foundations_comparison.png)
 
 ```
 Figure 3.8
 Vision Dataset Foundations Comparison (Google OpenImages vs. Custom EasyLens Dataset)
 
-Note. Figure 3.8 illustrates the structural comparison between the massive, generalized Google OpenImages dataset and the customized, highly domain-specific EasyLens pedestrian obstacle dataset.
+Note. Figure 3.8 compares Google Open Images, a general-purpose dataset of about 9 million images, with the custom 24-class EasyLens dataset of 38,176 images used to train and evaluate the custom MobileNetV2 classifier. Open Images is not used directly by EasyLens; live detection in Buddy uses a COCO-pretrained SSD MobileNet model and Google ML Kit.
 ```
 
 ---
 
 ### Comparative Evaluation Matrix
 
-| Architectural Dimension | Generic Web Dataset (Google OpenImages) | Custom EasyLens Pedestrian Dataset | Impact on Edge Performance |
-| :--- | :--- | :--- | :--- |
-| **Total Volume** | > 9,000,000 images | 38,176 curated images | Optimized for rapid transfer learning convergence on mobile hardware |
-| **Class Taxonomy** | > 600 generic classes | 24 critical pedestrian hazard classes | Eliminates classification ambiguity for immediate safety hazards |
-| **Domain Specificity** | Unfiltered general web scenes | Pedestrian ground-level viewpoints & sidewalk obstacles | Higher recall for low-lying tripping hazards (cracks, potholes, steps) |
-| **Regional Adaptation** | Global generic taxonomy | Unified `vehicle_other` covering Jeepneys & Tricycles | Prevents missed detections in dense Philippine urban traffic environments |
-| **Edge Deployment Footprint** | Large multi-gigabyte models required | Quantized 14.8 MB MobileNetV2 SSD binary | Sub-20 ms inference on commodity Android smartphones |
+| Dimension | Google Open Images (V7) | Custom EasyLens Dataset |
+| :--- | :--- | :--- |
+| **Source** | Google; general images from Flickr | Kaggle obstacle dataset (Gobara), cleaned by the researchers |
+| **Size** | About 9 million images | 38,176 images (31,866 train / 4,185 validation / 2,125 test) |
+| **Classes** | 600 object classes with bounding boxes; about 20,000 image-level labels | 24 classes (after merging person/Person and removing 5 ghost classes from 30) |
+| **Label type** | Bounding boxes and image-level labels | One label per image (image classification) |
+| **Content focus** | General everyday scenes and objects | Pedestrian hazards: vehicles, traffic lights and signs, crosswalks, potholes, stairs, traffic cones, trees and branches, doors, elevators |
+| **Role in EasyLens** | Not used directly. Live detection in Buddy uses a COCO-pretrained SSD MobileNet model and Google ML Kit | Used to train and evaluate the custom MobileNetV2 classifier (85.55% Top-1, offline); not yet integrated into Buddy |
