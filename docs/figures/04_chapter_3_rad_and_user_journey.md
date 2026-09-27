@@ -81,13 +81,13 @@ flowchart LR
 - **Figure Title**: *EasyLens Simplified User Journey and System Interaction Flowchart*
 - **Manuscript Page**: 100
 - **PDF Page**: 107
-- **Image Asset**: [fig_3_10_user_journey_flowchart.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_10_user_journey_flowchart.png)
+- **Image Asset**: [fig_user_journey_flowchart.png](assets/fig_user_journey_flowchart.png)
 
 ```
 Figure 3.10
 EasyLens Simplified User Journey and System Interaction Flowchart
 
-Note. Figure 3.10 maps the simplified user journey and logical interaction flows within the EasyLens system, illustrating hands-free initiation, real-time edge computer vision analysis, multimodal feedback dispatch, and emergency SOS routing.
+Note. Figure 3.10 shows the simplified user journey in EasyLens: connecting the smart glasses, choosing a feature by voice or touch, and what each feature does, including the Navigation-mode hazard warnings, Buddy's spoken answers, turn-by-turn walking navigation and the Emergency SOS countdown.
 ```
 
 ---
@@ -95,41 +95,57 @@ Note. Figure 3.10 maps the simplified user journey and logical interaction flows
 ### Technical Diagram (Mermaid)
 
 ```mermaid
+%%{init: {"flowchart": {"wrappingWidth": 260, "nodeSpacing": 30, "rankSpacing": 45}}}%%
 flowchart TD
-    START(["User Powers On Smart Glasses & Launches App"]) --> WIFI["Auto-Connect to Wi-Fi AP 'EasyLens-Camera' (192.168.4.1)"]
-    
-    WIFI --> DASH["Main Dashboard Navigation Screen\n(Personalized Time-Aware Greeting & Voice Prompt)"]
+    START(["User turns on the smart glasses and opens Buddy"])
+    WIFI["Join the 'EasyLens-Camera' Wi-Fi in phone settings, then tap Connect<br/>(the phone camera is used if the glasses are not connected)"]
+    DASH["Dashboard: time-of-day greeting and voice prompt"]
+    CHOICE{"User chooses a feature<br/>by voice or touch"}
 
-    DASH --> CHOICE{"User Selects Operational Mode\n(Voice Command or Touch Card)"}
+    CAM["Smart Glasses camera<br/>(Navigation mode)"]
+    OCR["Text Reader"]
+    BUDDY["Talk to Buddy"]
+    NAV["Walking Navigation"]
+    SOS["Emergency SOS"]
 
-    CHOICE -->|Object Detection| OBJ["Active Edge-AI Object Detector\n(Continuous 30 FPS Stream Receiver)"]
-    CHOICE -->|OCR Text Reader| OCR["Nearby Text Scanner\n(Capture Image & ML Kit Extraction)"]
-    CHOICE -->|Local AI Assistant| BUDDY["Talk to Buddy (Gemma-IT 2B / Gemini 3.6)\n(Hands-Free Speech Dialogue & Q&A)"]
-    CHOICE -->|Walking Navigation| NAV["GPS Clock-Face Audio Navigation\n(Turn-by-Turn Spoken Bearings)"]
-    CHOICE -->|Emergency SOS| SOS["Emergency SOS Dispatch Flow\n(5-Second Audible Countdown)"]
+    DETECT["Google ML Kit detects objects and labels each frame"]
+    HAZ{"Obstacle or hazard<br/>in the path?"}
+    STOP["Very close and centered:<br/>'Stop immediately' + strong vibration"]
+    AVOID["Close and centered:<br/>'Obstacle ahead, step to your left/right' + vibration"]
+    WARN["Hazard recognized (e.g., vehicle, stairs, fire):<br/>spoken warning"]
+    CLEAR["Path clear:<br/>no warning"]
+    REPEAT(["Repeat for the next frame"])
 
-    OBJ --> ISOLATE["Dart Parallel Worker Isolate\n(Resize to 300x300 & Normalize Frame)"]
-    ISOLATE --> INFER["MobileNetV2 SSD 24-Class Inference"]
-    
-    INFER --> CHECK_HAZARD{"Obstacle Detected?\n(Score > 0.65)"}
-    
-    CHECK_HAZARD -->|"Critical Threat: Stop, Vehicle, or Wires"| CRIT["Double Haptic Vibration Pulse<br>+ High-Priority Voice Override: STOP! Vehicle Approaching"]
-    CHECK_HAZARD -->|"Moderate Threat: Steps, Pothole, or Pole"| MOD["Single Haptic Vibration Pulse<br>+ Directional Voice Alert: Stairs Ahead at 12 o'clock"]
-    CHECK_HAZARD -->|"No Threat: Clear Path"| CLEAR["Maintain Silent Scanning / Periodic Status Cue"]
+    OCR_OUT["Reads the text aloud<br/>(English / Filipino)"]
+    BUDDY_OUT["Answers by voice:<br/>Gemma 2B on the phone (English)<br/>or Gemini online (Filipino)"]
+    NAV_OUT["Speaks turn-by-turn steps and<br/>alerts the user near each turn (GPS)"]
 
-    OCR --> OCR_SPEAK["Bilingual Text-to-Speech Reads Detected Text Aloud"]
-    BUDDY --> BUDDY_SPEAK["Spoken Conversational Response Generated Locally"]
-    NAV --> NAV_SPEAK["Spoken Directional Instruction: Head towards 2 o'clock"]
+    COUNT{"Cancelled within<br/>5 seconds?"}
+    SOS_CANCEL["SOS cancelled"]
+    SOS_SEND["SMS with Google Maps location link<br/>sent to emergency contacts"]
 
-    SOS --> COUNTDOWN{"Cancelled within 5 seconds?"}
-    COUNTDOWN -->|"Yes: Tap or Shake"| SOS_CANCEL["Cancel SOS and Announce Cancellation via Voice"]
-    COUNTDOWN -->|"No: Timer Expires"| SOS_FIRE["Dispatch SMS with Real-Time GPS Coordinates<br>+ Upload Snapshot to Cloudflare R2"]
+    START --> WIFI --> DASH --> CHOICE
+    CHOICE --> CAM
+    CHOICE --> OCR
+    CHOICE --> BUDDY
+    CHOICE --> NAV
+    CHOICE --> SOS
 
-    CRIT --> CYCLE(["Loop Continuous Processing"])
-    MOD --> CYCLE
-    CLEAR --> CYCLE
-    OCR_SPEAK --> CYCLE
-    BUDDY_SPEAK --> CYCLE
-    NAV_SPEAK --> CYCLE
-    SOS_FIRE --> END(["Standby / Monitoring State"])
+    CAM --> DETECT --> HAZ
+    HAZ -->|Yes| STOP
+    HAZ -->|Yes| AVOID
+    HAZ -->|Yes| WARN
+    HAZ -->|No| CLEAR
+    STOP --> REPEAT
+    AVOID --> REPEAT
+    WARN --> REPEAT
+    CLEAR --> REPEAT
+
+    OCR --> OCR_OUT
+    BUDDY --> BUDDY_OUT
+    NAV --> NAV_OUT
+
+    SOS --> COUNT
+    COUNT -->|Yes| SOS_CANCEL
+    COUNT -->|No| SOS_SEND
 ```
