@@ -202,4 +202,4 @@ Note. Figure 3.8 compares Google Open Images, a general-purpose dataset of about
 | **Classes** | 600 object classes with bounding boxes; about 20,000 image-level labels | 24 classes (after merging person/Person and removing 5 ghost classes from 30) |
 | **Label type** | Bounding boxes and image-level labels | One label per image (image classification) |
 | **Content focus** | General everyday scenes and objects | Pedestrian hazards: vehicles, traffic lights and signs, crosswalks, potholes, stairs, traffic cones, trees and branches, doors, elevators |
-| **Role in EasyLens** | Not used directly. Live detection in Buddy uses a COCO-pretrained SSD MobileNet model and Google ML Kit | Used to train and evaluate the custom MobileNetV2 classifier (85.55% Top-1, offline); not yet integrated into Buddy |
+| **Role in EasyLens** | Not used directly. Live detection in Buddy uses a COCO-pretrained SSD MobileNet model and Google ML Kit | Used to train and evaluate the custom MobileNetV2 classifier (offline); not yet integrated into Buddy |

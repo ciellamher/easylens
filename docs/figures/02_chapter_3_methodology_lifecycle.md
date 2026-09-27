@@ -108,4 +108,4 @@ flowchart TD
 
 The research follows the standardized CRISP-DM framework adapted for resource-constrained edge-AI mobile deployment:
 1. **Iterative Alignment**: Data understanding and preparation required extensive cleansing to prevent class imbalance from skewing obstacle detection on mobile hardware.
-2. **Deployment Status**: The final Phase 4 model (85.55% Top-1 accuracy on 2,125 test images) was saved in Keras format after training in Google Colab. It has not been converted to TensorFlow Lite or integrated into the mobile application; live detection in Buddy uses the COCO-pretrained SSD MobileNet model and Google ML Kit.
+2. **Deployment Status**: The final Phase 4 model was saved in Keras format after training in Google Colab. It has not been converted to TensorFlow Lite or integrated into the mobile application; live detection in Buddy uses the COCO-pretrained SSD MobileNet model and Google ML Kit.
