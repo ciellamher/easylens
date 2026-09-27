@@ -2,20 +2,20 @@
 
 ---
 
-## Figure 3.3: Dataset Curation and Pruning Workflow from 26-Class to 24-Class Taxonomy
+## Figure 3.3: Dataset Curation and Pruning Workflow from 30 Raw Labels to the 24-Class Taxonomy
 
 ### APA 7th Citation & Metadata
 - **Figure Number**: Figure 3.3
-- **Figure Title**: *Dataset Curation and Pruning Workflow from 26-Class to 24-Class Taxonomy*
+- **Figure Title**: *Dataset Curation and Pruning Workflow from 30 Raw Labels to the 24-Class Taxonomy*
 - **Manuscript Page**: 51
 - **PDF Page**: 58
-- **Image Asset**: [fig_3_3_dataset_curation_workflow.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_3_dataset_curation_workflow.png)
+- **Image Asset**: [fig_dataset_curation_workflow.png](assets/fig_dataset_curation_workflow.png)
 
 ```
 Figure 3.3
-Dataset Curation and Pruning Workflow from 26-Class to 24-Class Taxonomy
+Dataset Curation and Pruning Workflow from 30 Raw Labels to the 24-Class Taxonomy
 
-Note. Figure 3.3 illustrates the step-by-step data-centric preprocessing and restructuring pipeline used to clean, prune, and consolidate the international raw dataset of 38,922 images into an optimized 24-class pedestrian hazard dataset comprising 38,176 images.
+Note. Figure 3.3 shows how the raw Kaggle dataset (30 class folders, 38,262 images) was reduced to the 24-class taxonomy: the overlapping person and Person folders were merged, and five ghost classes too small to learn from (chair, handbag, traffic_light and umbrella with 3 images each; bench with 9) were removed. The final dataset contains 38,176 images (31,866 train / 4,185 validation / 2,125 test).
 ```
 
 ---
@@ -23,36 +23,19 @@ Note. Figure 3.3 illustrates the step-by-step data-centric preprocessing and res
 ### Technical Diagram (Mermaid)
 
 ```mermaid
+%%{init: {"flowchart": {"wrappingWidth": 380, "nodeSpacing": 35, "rankSpacing": 45}}}%%
 flowchart TD
-    RAW["Raw Secondary Dataset\n• 38,922 COCO-Annotated Images\n• 29 Unique Raw Classes (Gobara, 2024)"]
+    RAW["<b>Raw Kaggle dataset (Gobara)</b><br/>30 class folders · 38,262 images<br/>31,944 train / 4,189 validation / 2,129 test"]
 
-    subgraph PREPROCESSING ["Data Cleaning & Consolidation Pipeline"]
-        direction TB
+    AUDIT["<b>1. Audit class folders</b><br/>• Duplicate labels: person and Person<br/>• Five near-empty ('ghost') classes the model could not learn"]
 
-        STEP1["1. Label Deduplication & Normalization\n• Consolidate uppercase 'Person' into canonical 'person'\n• Resolve duplicate label IDs"]
-        
-        STEP2["2. Localized Philippine Hazard Mapping\n• Group regional urban vehicles (Tricycles, Jeepneys, Multicabs)\n• Map into unified 'vehicle_other' class"]
+    MERGE["<b>2. Merge overlapping folders</b><br/>person merged into Person<br/>30 → 29 classes"]
 
-        STEP3["3. Extreme Minority Ghost Class Pruning\n• Identify classes with <= 3 training instances\n• Prune: 'bench', 'chair', 'handbag', 'umbrella', 'traffic_light'\n• Remove 746 noise/outlier images"]
+    PRUNE["<b>3. Prune ghost classes</b><br/>chair, handbag, traffic_light, umbrella (3 images each)<br/>bench (9 images in train and test)<br/>29 → 24 classes"]
 
-        STEP4["4. Spatial Data Augmentation\n• Random horizontal flipping (p=0.5)\n• Brightness & contrast jitter (±15% for outdoor/indoor shifts)\n• Multi-scale bounding box jitter"]
-    end
+    FINAL["<b>Final 24-class dataset</b><br/>38,176 images<br/>31,866 train / 4,185 validation / 2,125 test"]
 
-    FINAL["Final Curated EasyLens Dataset\n• 38,176 Clean Images\n• 24 Standardized Pedestrian Classes"]
-
-    subgraph PARTITION ["Data Partitioning (80 / 10 / 10 Split)"]
-        direction LR
-        TRAIN["Training Set\n30,540 images (80%)"]
-        VAL["Validation Set\n3,818 images (10%)"]
-        TEST["Test Set\n3,818 images (10%)\n(2,125 isolated test subset)"]
-    end
-
-    RAW --> STEP1
-    STEP1 --> STEP2
-    STEP2 --> STEP3
-    STEP3 --> STEP4
-    STEP4 --> FINAL
-    FINAL --> PARTITION
+    RAW --> AUDIT --> MERGE --> PRUNE --> FINAL
 ```
 
 ---

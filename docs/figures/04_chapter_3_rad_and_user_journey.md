@@ -39,13 +39,13 @@ Note. Figure 3.7 illustrates the side-by-side interface layout comparing the def
 - **Figure Title**: *The Customized Rapid Application Development (RAD) Prototyping and Evaluation Lifecycle*
 - **Manuscript Page**: 98
 - **PDF Page**: 105
-- **Image Asset**: [fig_3_9_rad_prototyping_lifecycle.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_9_rad_prototyping_lifecycle.png)
+- **Image Asset**: [fig_rad_lifecycle.png](assets/fig_rad_lifecycle.png)
 
 ```
 Figure 3.9
 The Customized Rapid Application Development (RAD) Prototyping and Evaluation Lifecycle
 
-Note. Figure 3.9 illustrates the customized Rapid Application Development (RAD) lifecycle model incorporating rapid CAD enclosure modeling, continuous machine learning integration, and iterative usability testing with visually impaired participants.
+Note. Figure 3.9 shows the customized Rapid Application Development (RAD) lifecycle: requirements planning, user design, construction and cutover/evaluation, with iterative prototyping between design and construction and refinements fed back from evaluation.
 ```
 
 ---
@@ -53,23 +53,20 @@ Note. Figure 3.9 illustrates the customized Rapid Application Development (RAD) 
 ### Technical Diagram (Mermaid)
 
 ```mermaid
+%%{init: {"flowchart": {"wrappingWidth": 300, "nodeSpacing": 45, "rankSpacing": 60}}}%%
 flowchart LR
-    subgraph RAD_LIFECYCLE ["EASYLENS CUSTOMIZED RAD LIFECYCLE"]
-        direction TB
+    P1["<b>Phase 1: Requirements Planning</b><br/>• Define assistive goals for visually impaired pedestrians<br/>• Set evaluation criteria (usability and system quality)<br/>• Select low-cost hardware: ESP32-CAM glasses and a smartphone"]
 
-        P1["Phase 1: Requirements Planning\n• Define pedestrian assistive objectives\n• Map ISO/IEC 25010 & WEAR scale metrics\n• Select low-cost, off-the-shelf hardware (ESP32-CAM)"]
+    P2["<b>Phase 2: User Design</b><br/>• Voice-first, accessible app screens<br/>• Large text and high-contrast themes<br/>• Smart-glasses enclosure design"]
 
-        P2["Phase 2: User Design & Rapid Prototyping\n• Figma accessible wireframes & WCAG AAA tokens\n• Parametric CAD box frame & clip modeling\n• Interactive high-contrast UI swatches"]
+    P3["<b>Phase 3: Construction</b><br/>• Flutter app (Buddy) and ESP32-CAM Wi-Fi video stream<br/>• Hazard detection: COCO-pretrained SSD MobileNet and Google ML Kit<br/>• Text reading, face recognition and Buddy assistant (Gemma 2B / Gemini)<br/>• Custom MobileNetV2 classifier trained in parallel (CRISP-DM)"]
 
-        P3["Phase 3: Construction & AI Model Integration\n• 3D printing PLA enclosures & heatsink mounting\n• Flutter core development with Dart Isolates\n• TFLite MobileNetV2 SSD, OCR & Gemma 2B LLM\n• Cloudflare D1/R2 & Firebase synchronization"]
-
-        P4["Phase 4: Cutover & Empirical Evaluation\n• Live walking trials with N=15 visually impaired users\n• Technical evaluations with N=5 expert panel\n• Continuous integration & OTA update release"]
-    end
+    P4["<b>Phase 4: Cutover and Evaluation</b><br/>• End-user testing (n = 15)<br/>• Expert evaluation (n = 5)<br/>• Fixes released as new app versions"]
 
     P1 --> P2
-    P2 <--> P3
-    P3 <--> P4
-    P4 -.->|Iterative Refinements| P2
+    P2 <-->|Iterative prototyping| P3
+    P3 --> P4
+    P4 -.->|Refinements| P2
 ```
 
 ---
