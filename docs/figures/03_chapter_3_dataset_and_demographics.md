@@ -47,7 +47,7 @@ flowchart TD
 - **Figure Title**: *Age and Gender Demographic Distribution of the Visually Impaired End-User Cohort (N = 15)*
 - **Manuscript Page**: 58
 - **PDF Page**: 65
-- **Image Asset**: [fig_3_4_demographics_age_gender.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_4_demographics_age_gender.png)
+- **Image Asset**: [fig_3_4_demographics_age_gender.png](assets/fig_3_4_demographics_age_gender.png)
 
 ```
 Figure 3.4
@@ -105,7 +105,7 @@ pie title Cohort Age Distribution (N = 15)
 - **Figure Title**: *Primary Mobility Aid and World Health Organization Low-Vision Grade Distribution (N = 15)*
 - **Manuscript Page**: 59
 - **PDF Page**: 66
-- **Image Asset**: [fig_3_5_mobility_aid_who_grades.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_5_mobility_aid_who_grades.png)
+- **Image Asset**: [fig_3_5_mobility_aid_who_grades.png](assets/fig_3_5_mobility_aid_who_grades.png)
 
 ```
 Figure 3.5
@@ -143,7 +143,7 @@ pie title WHO Visual Impairment Grade Distribution (N = 15)
 - **Figure Title**: *Professional Years of IT Experience and Domain Focus Areas of the Expert Panel (N = 5)*
 - **Manuscript Page**: 62
 - **PDF Page**: 69
-- **Image Asset**: [fig_3_6_expert_panel_experience.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_6_expert_panel_experience.png)
+- **Image Asset**: [fig_3_6_expert_panel_experience.png](assets/fig_3_6_expert_panel_experience.png)
 
 ```
 Figure 3.6
