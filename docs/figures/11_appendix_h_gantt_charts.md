@@ -1,4 +1,6 @@
-# Appendix H: Project Timeline & Gantt Charts
+# Appendix H: Gantt Chart and Project Timeline
+
+Both charts are drawn with matplotlib (source below). Dates before July 2026 are the research team's schedule. Dates from July 2026 onward are consistent with the project's Git history and GitHub Releases: the app repository begins on July 7, 2026; the CI/CD pipeline was added on July 16 and the Docker landing page on July 25; releases v21–v25 were published between August 4 and August 23; and the RA 10173 face-registration consent was merged on September 27.
 
 ---
 
@@ -7,47 +9,13 @@
 ### APA 7th Citation & Metadata
 - **Figure Number**: Figure H.1
 - **Figure Title**: *Simplified Gantt Chart (Phase-Level Overview)*
-- **Manuscript Page**: 187
-- **PDF Page**: 195
-- **Image Asset**: [fig_h_gantt_charts.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_h_gantt_charts.png)
+- **Image Asset**: [fig_h_1_gantt_phases.png](assets/fig_h_1_gantt_phases.png)
 
 ```
 Figure H.1
 Simplified Gantt Chart (Phase-Level Overview)
 
-Note. Figure H.1 provides a high-level visual summary of the seven (7) core phases comprising the EasyLens research and development schedule between December 2025 and August 2026.
-```
-
----
-
-### Technical Diagram (Mermaid High-Level Gantt)
-
-```mermaid
-gantt
-    title EasyLens High-Level Phase Overview (Dec 2025 – Aug 2026)
-    dateFormat  YYYY-MM-DD
-    axisFormat  %b %Y
-
-    section Phase 1: Research
-    Research & Component Sourcing       :done, p1, 2025-12-01, 2026-01-31
-
-    section Phase 2: Hardware
-    3D Box Frame Design & Prototyping   :done, p2, 2026-01-15, 2026-03-31
-
-    section Phase 3: AI Model
-    Dataset Cleaning & Model Training   :done, p3, 2026-03-15, 2026-05-15
-
-    section Phase 4: Mobile App
-    Flutter Core & Vision App Pipeline  :done, p4, 2026-05-01, 2026-06-30
-
-    section Phase 5: Cloud Tier
-    Cloudflare & Firebase Backend Sync  :done, p5, 2026-06-15, 2026-07-20
-
-    section Phase 6: User Testing
-    User Evaluation & Technical Audits  :done, p6, 2026-07-01, 2026-08-15
-
-    section Phase 7: Final Polish
-    Thesis Polish & Official Release    :done, p7, 2026-08-01, 2026-08-28
+Note. Figure H.1 summarizes the eight phases of the EasyLens project from December 2025 to September 2026, from research and hardware sourcing through the post-defense revisions.
 ```
 
 ---
@@ -57,67 +25,112 @@ gantt
 ### APA 7th Citation & Metadata
 - **Figure Number**: Figure H.2
 - **Figure Title**: *Detailed Gantt Chart (Task & Deliverable Breakdown)*
-- **Manuscript Page**: 187
-- **PDF Page**: 195
-- **Image Asset**: [fig_h_gantt_charts.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_h_gantt_charts.png)
+- **Image Asset**: [fig_h_2_gantt_detailed.png](assets/fig_h_2_gantt_detailed.png)
 
 ```
 Figure H.2
 Detailed Gantt Chart (Task & Deliverable Breakdown)
 
-Note. Figure H.2 outlines the comprehensive work-breakdown structure (WBS), itemizing the twenty-one (21) discrete engineering tasks, AI fine-tuning milestones, and field-testing protocols executed during project implementation.
+Note. Figure H.2 breaks the eight phases into thirty tasks. The custom MobileNetV2 classifier was trained offline in Google Colab and was not converted to TFLite or added to the app; live detection in the app uses Google ML Kit and a COCO-pretrained SSD MobileNet model.
 ```
 
 ---
 
-### Technical Diagram (Mermaid Detailed Gantt)
+### Source (Python, matplotlib)
 
-```mermaid
-gantt
-    title EasyLens Detailed Execution Schedule (Dec 2025 – Aug 2026)
-    dateFormat  YYYY-MM-DD
-    axisFormat  %b %Y
+```python
+import datetime as dt
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
-    section 1. Initiation & Hardware
-    System Modeling & Architecture Definition    :done, t1, 2025-12-01, 2026-01-15
-    Hardware Sourcing (ESP32-CAM, Lens, LiPo)    :done, t2, 2025-12-15, 2026-01-31
+OUT = "/Users/graciellajimenez/THESIS/easylens/docs/figures/assets/"
+plt.rcParams.update({"font.family": "DejaVu Sans"})
+D = lambda s: dt.date.fromisoformat(s)
+COL = ["#4C72B0", "#8172B3", "#DD8452", "#55A868", "#64B5CD", "#C44E52", "#937860", "#8C8C8C"]
 
-    section 2. 3D Frame & Hardware Fitting
-    3D Box Frame PLA CAD Design & Printing       :done, t3, 2026-01-15, 2026-02-28
-    Thermal Heatsink Pad & Eyewear Fitting       :done, t4, 2026-02-15, 2026-03-15
-    ESP32 Wi-Fi AP MJPEG Stream Latency Test     :done, t5, 2026-03-01, 2026-03-31
+PHASES = [
+ ("1. Research and Sourcing",          "2025-12-01", "2026-01-31"),
+ ("2. Hardware Prototyping",           "2026-01-15", "2026-03-31"),
+ ("3. AI Model Training (offline)",    "2026-03-15", "2026-05-15"),
+ ("4. Mobile App Development",         "2026-05-01", "2026-07-15"),
+ ("5. Cloud Services and Deployment",  "2026-06-20", "2026-08-23"),
+ ("6. User Testing and Evaluation",    "2026-07-01", "2026-08-18"),
+ ("7. Documentation and Defense",      "2026-08-01", "2026-08-28"),
+ ("8. Post-Defense Revisions",         "2026-08-29", "2026-09-30"),
+]
 
-    section 3. AI Model Training (Apr–May)
-    24-Class COCO Cleaning & Pruning             :done, t6, 2026-03-15, 2026-04-15
-    Spatial Data Augmentation Pipeline           :done, t7, 2026-04-01, 2026-04-20
-    Phase 1 Warm-up Head Training in Colab       :done, t8, 2026-04-15, 2026-04-25
-    Phase 2 Unfreeze Top 30 Layers               :done, t9, 2026-04-25, 2026-05-05
-    Phase 3 & 4 Micro-LR Fine-Tuning             :done, t10, 2026-05-01, 2026-05-15
-    TFLite INT8 Post-Training Quantization       :done, t11, 2026-05-10, 2026-05-20
+TASKS = [
+ (0, "System modeling and architecture",                 "2025-12-01", "2026-01-15"),
+ (0, "Hardware sourcing (ESP32-CAM, lens, power bank)",  "2025-12-15", "2026-01-31"),
+ (1, "3D-printed frame design and printing",             "2026-01-15", "2026-02-28"),
+ (1, "Eyewear fitting and heat management",              "2026-02-15", "2026-03-15"),
+ (1, "ESP32 Wi-Fi camera stream testing",                "2026-03-01", "2026-03-31"),
+ (2, "Dataset audit and cleaning (30 to 24 classes)",    "2026-03-15", "2026-04-15"),
+ (2, "Data augmentation setup",                          "2026-04-01", "2026-04-20"),
+ (2, "Phase 1: train new classifier head",               "2026-04-15", "2026-04-25"),
+ (2, "Phase 2: unfreeze top 30 layers",                  "2026-04-25", "2026-05-05"),
+ (2, "Phases 3–4: fine-tuning and test evaluation",      "2026-05-01", "2026-05-15"),
+ (3, "Flutter setup and state management (Provider)",    "2026-05-01", "2026-05-25"),
+ (3, "Object detection (SSD MobileNet, bounding boxes)", "2026-05-20", "2026-06-20"),
+ (3, "ML Kit text reading, labeling, face recognition",  "2026-06-01", "2026-06-30"),
+ (3, "Buddy assistant (Gemma 2B, Gemini, TF-IDF)",       "2026-06-10", "2026-07-15"),
+ (3, "Voice (English/Tagalog) and vibration feedback",   "2026-06-20", "2026-07-10"),
+ (3, "GPS navigation and SOS alerts",                    "2026-06-25", "2026-07-15"),
+ (4, "Cloudflare R2 profile photo storage",              "2026-06-20", "2026-07-20"),
+ (4, "Firebase Authentication and Firestore",            "2026-06-25", "2026-07-25"),
+ (4, "CI/CD pipeline and Docker landing page",           "2026-07-16", "2026-07-25"),
+ (4, "App releases v21–v25 (APK/IPA)",                   "2026-08-04", "2026-08-23"),
+ (5, "Participant onboarding and informed consent",      "2026-07-01", "2026-07-10"),
+ (5, "Walking trials with end-users (N = 15)",           "2026-07-10", "2026-08-05"),
+ (5, "WEAR comfort and thermal safety check",            "2026-07-15", "2026-08-10"),
+ (5, "ISO/IEC 25010 expert evaluation (N = 5)",          "2026-07-20", "2026-08-12"),
+ (5, "WCAG 2.2 contrast and audio check",                "2026-07-25", "2026-08-15"),
+ (5, "Data encoding and Likert analysis",                "2026-08-01", "2026-08-18"),
+ (6, "Manuscript writing and APA 7th revisions",         "2026-08-01", "2026-08-20"),
+ (6, "Final defense",                                    "2026-08-25", "2026-08-28"),
+ (7, "RA 10173 face-registration consent",               "2026-09-24", "2026-09-27"),
+ (7, "Manuscript and figure revisions",                  "2026-08-29", "2026-09-30"),
+]
 
-    section 4. App Development (May–Jul)
-    Flutter Setup & Provider State Layer         :done, t12, 2026-05-01, 2026-05-25
-    Dart Isolate 300x300 Resize Pipeline         :done, t13, 2026-05-20, 2026-06-10
-    TFLite Overlay & Spatial Bounding Boxes      :done, t14, 2026-06-01, 2026-06-20
-    ML Kit OCR & Local Gemma 2B LLM Integration  :done, t15, 2026-06-10, 2026-06-30
-    Spatial TTS (EN/TL) & Haptics Engine         :done, t16, 2026-06-20, 2026-07-10
-    GPS Clock-Face Walking Navigation            :done, t17, 2026-06-25, 2026-07-15
+def axis(ax, start="2025-12-01", end="2026-10-01"):
+    ax.set_xlim(D(start), D(end))
+    ax.xaxis.set_major_locator(mdates.MonthLocator())
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%b\n%Y"))
+    ax.xaxis.tick_top()
+    ax.grid(axis="x", color="#E3E3E3")
+    ax.set_axisbelow(True)
+    for s in ("right", "bottom", "left"): ax.spines[s].set_visible(False)
+    ax.tick_params(axis="y", length=0)
 
-    section 5. Cloud Backend Sync
-    Cloudflare D1 SQL Telemetry API Integration  :done, t18, 2026-06-15, 2026-07-15
-    Cloudflare R2 Bucket & AWS SigV4 Uploads     :done, t19, 2026-06-20, 2026-07-20
-    Firebase Auth & Firestore Real-Time Sync     :done, t20, 2026-06-25, 2026-07-25
+# H.1
+fig, ax = plt.subplots(figsize=(11, 4.4), dpi=220)
+for i, (name, a, b) in enumerate(PHASES):
+    ax.barh(i, (D(b) - D(a)).days, left=D(a), height=0.55, color=COL[i])
+ax.set_yticks(range(len(PHASES)), [p[0] for p in PHASES], fontsize=10.5)
+ax.invert_yaxis(); axis(ax)
+plt.tight_layout(); plt.savefig(OUT + "fig_h_1_gantt_phases.png", facecolor="white"); plt.close()
 
-    section 6. Empirical User Testing (Jul–Aug)
-    Participant Onboarding & Informed Consent    :done, t21, 2026-07-01, 2026-07-10
-    Walking Trials with Visually Impaired (N=15) :done, t22, 2026-07-10, 2026-08-05
-    WEAR Scale Comfort & Thermal Safety Audit    :done, t23, 2026-07-15, 2026-08-10
-    ISO/IEC 25010 Signal Fault Tolerance Audits  :done, t24, 2026-07-20, 2026-08-12
-    WCAG 2.2 AAA Contrast & Audio Priority Audit :done, t25, 2026-07-25, 2026-08-15
-    Empirical Data Transcription & Likert Stat   :done, t26, 2026-08-01, 2026-08-18
-
-    section 7. Document Polish (Aug 1–28)
-    Thesis Manuscript APA 7th Revisions          :done, t27, 2026-08-01, 2026-08-20
-    Final Code Optimization & Release APK/IPA    :done, t28, 2026-08-15, 2026-08-25
-    Final Academic Defense & Institutional Sign  :done, t29, 2026-08-25, 2026-08-28
+# H.2
+fig, ax = plt.subplots(figsize=(12, 11.5), dpi=200)
+labels, y = [], 0
+ys = []
+for pi, (pname, _, _) in enumerate(PHASES):
+    ys.append(("phase", y, pname, pi)); labels.append(pname); y += 1
+    for (p, name, a, b) in TASKS:
+        if p == pi:
+            ys.append(("task", y, name, p, a, b)); labels.append("   " + name); y += 1
+for row in ys:
+    if row[0] == "phase":
+        ax.axhspan(row[1] - 0.5, row[1] + 0.5, color="#F2F2F2", zorder=0)
+    else:
+        _, yy, name, p, a, b = row
+        ax.barh(yy, max((D(b) - D(a)).days, 3), left=D(a), height=0.6, color=COL[p], zorder=2)
+ax.set_yticks(range(len(labels)), labels, fontsize=9.5)
+for t, row in zip(ax.get_yticklabels(), ys):
+    if row[0] == "phase": t.set_fontweight("bold")
+ax.set_ylim(len(labels) - 0.5, -0.5); axis(ax)
+plt.tight_layout(); plt.savefig(OUT + "fig_h_2_gantt_detailed.png", facecolor="white"); plt.close()
+print("ok")
 ```
