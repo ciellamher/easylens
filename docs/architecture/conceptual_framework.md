@@ -48,11 +48,11 @@ flowchart LR
 **Figure 2.1.** Conceptual Framework of EasyLens
 
 ```mermaid
-%%{init: {"flowchart": {"wrappingWidth": 300}}}%%
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#EEF3FB", "primaryBorderColor": "#4C72B0", "primaryTextColor": "#1A1A1A", "lineColor": "#444444", "fontFamily": "arial, sans-serif", "fontSize": "15px"}, "fontFamily": "arial, sans-serif", "flowchart": {"wrappingWidth": 300}}}%%
 flowchart LR
-    INPUT[/"<b>INPUT</b><br/><br/>• Live video from the smart glasses (ESP32-CAM) or phone camera<br/>• GPS location<br/>• Voice commands<br/>• User settings, emergency contacts and registered faces (with consent)"/]
+    INPUT[/"<b>INPUT</b><br/><br/>• Live video from the smart glasses (ESP32‑CAM) or phone camera<br/>• GPS location<br/>• Voice commands<br/>• User settings, emergency contacts, registered faces (with consent) and Buddy's journals"/]
 
-    PROCESS["<b>PROCESS</b> (on the smartphone)<br/><br/>• Object and hazard detection: COCO-pretrained SSD&nbsp;MobileNet and Google&nbsp;ML&nbsp;Kit<br/>• Left / Center / Right hazard steering<br/>• Text reading (OCR) and face recognition<br/>• Buddy assistant: Gemma 2B with TF‑IDF search (Local AI mode, default) or Gemini (online mode)<br/>• GPS navigation (online routing)"]
+    PROCESS["<b>PROCESS</b> (on the smartphone)<br/><br/>• Navigation mode: Google&nbsp;ML&nbsp;Kit object detection and image labeling, with Left / Center / Right hazard steering<br/>• Object Detection mode: COCO-pretrained SSD&nbsp;MobileNet with bounding boxes<br/>• Text reading (OCR) and face recognition (Google&nbsp;ML&nbsp;Kit)<br/>• Buddy assistant: TF‑IDF search of the knowledge base and journals; Gemma 2B (Local AI mode, default) or Gemini (online mode)<br/>• GPS navigation (online routing)"]
 
     OUTPUT[/"<b>OUTPUT</b><br/><br/>• Spoken warnings and guidance (English&nbsp;/&nbsp;Filipino)<br/>• Vibration alerts<br/>• On-screen HUD with bounding boxes<br/>• SOS text message to emergency contacts"/]
 
