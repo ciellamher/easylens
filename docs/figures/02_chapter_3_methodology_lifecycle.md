@@ -2,60 +2,21 @@
 
 ---
 
-## Figure 3.1: EasyLens Project Implementation Timeline and Seven-Phase Activity Roadmap
+## Figure 3.1: EasyLens Project Implementation Timeline and Eight-Phase Activity Roadmap
 
 ### APA 7th Citation & Metadata
 - **Figure Number**: Figure 3.1
-- **Figure Title**: *EasyLens Project Implementation Timeline and Seven-Phase Activity Roadmap*
-- **Manuscript Page**: 42
-- **PDF Page**: 49
-- **Image Asset**: [fig_3_1_timeline_roadmap.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_1_timeline_roadmap.png)
+- **Figure Title**: *EasyLens Project Implementation Timeline and Eight-Phase Activity Roadmap*
+- **Image Asset**: [fig_3_1_timeline_roadmap.png](assets/fig_3_1_timeline_roadmap.png)
 
 ```
 Figure 3.1
-EasyLens Project Implementation Timeline and Seven-Phase Activity Roadmap
+EasyLens Project Implementation Timeline and Eight-Phase Activity Roadmap
 
-Note. Figure 3.1 represents the chronological Gantt chart mapping out the hardware prototyping, machine learning engineering, mobile software construction, empirical walking evaluations, and thesis document finalization phases executed between December 2025 and August 2026.
+Note. Figure 3.1 shows the eight phases of the EasyLens project from December 2025 to September 2026: research and sourcing, hardware prototyping, offline AI model training, mobile app development, cloud services and deployment, user testing and evaluation, documentation and defense, and post-defense revisions. The detailed task breakdown is compiled in Appendix H.
 ```
 
----
-
-### Technical Diagram (Mermaid)
-
-```mermaid
-gantt
-    title EasyLens Seven-Phase Implementation Roadmap (Dec 2025 – Aug 2026)
-    dateFormat  YYYY-MM-DD
-    axisFormat  %b %Y
-
-    section Phase 1: Research & Hardware
-    Literature Review & Architecture Sourcing       :p1, 2025-12-01, 2026-01-15
-    Component Procurement (ESP32-CAM, Lens, Battery) :p1b, 2025-12-15, 2026-01-31
-
-    section Phase 2: Hardware & Enclosure
-    Parametric CAD 3D Box Frame Design              :p2, 2026-01-15, 2026-02-28
-    PLA 3D Printing, Heatsink & Frame Assembly      :p2b, 2026-02-15, 2026-03-31
-
-    section Phase 3: AI Model Training
-    24-Class COCO Cleaning & Spatial Augmentation   :p3, 2026-03-15, 2026-04-30
-    4-Phase MobileNetV2 Transfer Learning & TFLite  :p3b, 2026-04-01, 2026-05-15
-
-    section Phase 4: Flutter Mobile App
-    Flutter Core Architecture & Dart Isolates       :p4, 2026-05-01, 2026-06-15
-    ML Kit OCR, Gemma 2B & Spatial Audio/Haptics    :p4b, 2026-05-15, 2026-06-30
-
-    section Phase 5: Cloud & Backend Sync
-    Cloudflare D1 SQL Telemetry & R2 Storage Sync   :p5, 2026-06-15, 2026-07-15
-    Firebase Authentication & CI/CD Pipeline Setup  :p5b, 2026-06-20, 2026-07-20
-
-    section Phase 6: Empirical User Testing
-    Visually Impaired Walking Trials (N=15)         :p6, 2026-07-01, 2026-08-10
-    Technical Expert Quality Evaluations (N=5)      :p6b, 2026-07-15, 2026-08-15
-
-    section Phase 7: Document Polish & Release
-    Empirical Data Analysis & WCAG AAA Verification :p7, 2026-08-01, 2026-08-20
-    Final Manuscript Defense & Open-Source Release  :p7b, 2026-08-15, 2026-08-28
-```
+The image is the same chart as Figure H.1, drawn by `docs/figures/src/appendix_h_gantt.py`. After redrawing, copy `fig_h_1_gantt_phases.png` to `fig_3_1_timeline_roadmap.png` so the two figures stay identical.
 
 ---
 

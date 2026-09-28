@@ -24,7 +24,7 @@ PHASES = [
 TASKS = [
  (0, "System modeling and architecture",                 "2025-12-01", "2026-01-15"),
  (0, "Hardware sourcing (ESP32-CAM, lens, power bank)",  "2025-12-15", "2026-01-31"),
- (1, "3D-printed frame design and printing",             "2026-01-15", "2026-02-28"),
+ (1, "3D-printed PLA clip design and printing",             "2026-01-15", "2026-02-28"),
  (1, "Eyewear fitting and heat management",              "2026-02-15", "2026-03-15"),
  (1, "ESP32 Wi-Fi camera stream testing",                "2026-03-01", "2026-03-31"),
  (2, "Dataset audit and cleaning (30 to 24 classes)",    "2026-03-15", "2026-04-15"),
