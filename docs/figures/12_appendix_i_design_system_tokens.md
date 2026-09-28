@@ -9,7 +9,7 @@
 - **Figure Title**: *EasyLens Accessibility Design System and UI Toolkit Tokens*
 - **Manuscript Page**: 188
 - **PDF Page**: 196
-- **Image Asset**: [fig_i_1_design_system_tokens.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_i_1_design_system_tokens.png)
+- **Image Asset**: [fig_i_1_design_system_tokens.png](assets/fig_i_1_design_system_tokens.png)
 
 ```
 Figure I.1
@@ -57,7 +57,7 @@ graph TD
 - **Figure Title**: *EasyLens Deployed High-Fidelity UI Screens and Theme Swatches*
 - **Manuscript Page**: 190
 - **PDF Page**: 198
-- **Image Asset**: [fig_i_2_deployed_ui_swatches.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_i_2_deployed_ui_swatches.png)
+- **Image Asset**: [fig_i_2_deployed_ui_swatches.png](assets/fig_i_2_deployed_ui_swatches.png)
 
 ```
 Figure I.2
