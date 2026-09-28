@@ -17,7 +17,7 @@ To redraw the charts, run `python3 docs/figures/src/appendix_h_gantt.py`.
 Figure H.1
 Simplified Gantt Chart (Phase-Level Overview)
 
-Note. Figure H.1 summarizes the eight phases of the EasyLens project from December 2025 to September 2026, from research and hardware sourcing through the post-defense revisions. The final defense was held on September 23, 2026.
+Note. Figure H.1 summarizes the eight phases of the EasyLens project from December 2025 to September 2026, from research and hardware sourcing through the post-defense revisions. The hard copy was submitted on September 2, the final defense was held on September 23, and the soft copy and deliverables were submitted on September 28–29, 2026.
 ```
 
 ---
@@ -33,5 +33,5 @@ Note. Figure H.1 summarizes the eight phases of the EasyLens project from Decemb
 Figure H.2
 Detailed Gantt Chart (Task and Deliverable Breakdown)
 
-Note. Figure H.2 breaks the eight phases into thirty tasks. The custom MobileNetV2 classifier was trained offline in Google Colab and was not converted to TFLite or added to the app; live detection in the app uses Google ML Kit and a COCO-pretrained SSD MobileNet model.
+Note. Figure H.2 breaks the eight phases into 31 tasks. The custom MobileNetV2 classifier was trained offline in Google Colab and was not converted to TFLite or added to the app; live detection in the app uses Google ML Kit and a COCO-pretrained SSD MobileNet model.
 ```

@@ -18,7 +18,7 @@ PHASES = [
  ("5. Cloud Services and Deployment",  "2026-06-20", "2026-08-23"),
  ("6. User Testing and Evaluation",    "2026-07-01", "2026-08-18"),
  ("7. Documentation and Defense",      "2026-08-01", "2026-09-23"),
- ("8. Post-Defense Revisions",         "2026-09-24", "2026-09-30"),
+ ("8. Post-Defense Revisions",         "2026-09-24", "2026-09-29"),
 ]
 
 TASKS = [
@@ -46,12 +46,13 @@ TASKS = [
  (5, "Walking trials with end-users (N = 15)",           "2026-07-10", "2026-08-05"),
  (5, "WEAR comfort and thermal safety check",            "2026-07-15", "2026-08-10"),
  (5, "ISO/IEC 25010 expert evaluation (N = 5)",          "2026-07-20", "2026-08-12"),
- (5, "WCAG 2.2 contrast and audio check",                "2026-07-25", "2026-08-15"),
  (5, "Data encoding and Likert analysis",                "2026-08-01", "2026-08-18"),
- (6, "Manuscript writing and APA 7th revisions",         "2026-08-01", "2026-08-20"),
+ (6, "Manuscript writing and APA 7th revisions",         "2026-08-01", "2026-09-01"),
+ (6, "Hard copy submission",                             "2026-09-02", "2026-09-02"),
  (6, "Final defense",                                    "2026-09-23", "2026-09-23"),
  (7, "RA 10173 face-registration consent",               "2026-09-24", "2026-09-27"),
- (7, "Manuscript and figure revisions",                  "2026-09-24", "2026-09-30"),
+ (7, "Manuscript and figure revisions",                  "2026-09-24", "2026-09-27"),
+ (7, "Soft copy and deliverables submission",            "2026-09-28", "2026-09-29"),
 ]
 
 def axis(ax, start="2025-12-01", end="2026-10-01"):
