@@ -41,7 +41,7 @@ Note. Figure 3.2 shows the six CRISP-DM phases followed to develop the custom 24
 ### Technical Diagram (Mermaid)
 
 ```mermaid
-%%{init: {"flowchart": {"wrappingWidth": 330, "nodeSpacing": 40, "rankSpacing": 55}}}%%
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#EEF3FB", "primaryBorderColor": "#4C72B0", "primaryTextColor": "#1A1A1A", "secondaryColor": "#FFF6E5", "tertiaryColor": "#F7F7F7", "lineColor": "#444444", "fontFamily": "arial, sans-serif", "fontSize": "15px", "edgeLabelBackground": "#FFFFFF", "clusterBkg": "#F7F7F7", "clusterBorder": "#9A9A9A", "actorBkg": "#EEF3FB", "actorBorder": "#4C72B0", "actorTextColor": "#1A1A1A", "actorLineColor": "#9A9A9A", "signalColor": "#333333", "signalTextColor": "#1A1A1A", "noteBkgColor": "#F2F2F2", "noteBorderColor": "#9A9A9A", "labelBoxBkgColor": "#F2F2F2", "labelBoxBorderColor": "#9A9A9A", "loopTextColor": "#1A1A1A", "activationBkgColor": "#EEF3FB"}, "flowchart": {"wrappingWidth": 330, "nodeSpacing": 40, "rankSpacing": 55}, "fontFamily": "arial, sans-serif"}}%%
 flowchart TD
     BU["<b>1. Business Understanding</b><br/>• Recognize common pedestrian hazards for visually impaired users<br/>• Low-cost wearable: ESP32-CAM glasses connected to a smartphone"]
 

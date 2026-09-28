@@ -23,7 +23,7 @@ Note. Figure 3.3 shows how the raw Kaggle dataset (30 class folders, 38,262 imag
 ### Technical Diagram (Mermaid)
 
 ```mermaid
-%%{init: {"flowchart": {"wrappingWidth": 380, "nodeSpacing": 35, "rankSpacing": 45}}}%%
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#EEF3FB", "primaryBorderColor": "#4C72B0", "primaryTextColor": "#1A1A1A", "secondaryColor": "#FFF6E5", "tertiaryColor": "#F7F7F7", "lineColor": "#444444", "fontFamily": "arial, sans-serif", "fontSize": "15px", "edgeLabelBackground": "#FFFFFF", "clusterBkg": "#F7F7F7", "clusterBorder": "#9A9A9A", "actorBkg": "#EEF3FB", "actorBorder": "#4C72B0", "actorTextColor": "#1A1A1A", "actorLineColor": "#9A9A9A", "signalColor": "#333333", "signalTextColor": "#1A1A1A", "noteBkgColor": "#F2F2F2", "noteBorderColor": "#9A9A9A", "labelBoxBkgColor": "#F2F2F2", "labelBoxBorderColor": "#9A9A9A", "loopTextColor": "#1A1A1A", "activationBkgColor": "#EEF3FB"}, "flowchart": {"wrappingWidth": 380, "nodeSpacing": 35, "rankSpacing": 45}, "fontFamily": "arial, sans-serif"}}%%
 flowchart TD
     RAW["<b>Raw Kaggle dataset (Gobara)</b><br/>30 class folders · 38,262 images<br/>31,944 train / 4,189 validation / 2,129 test"]
 

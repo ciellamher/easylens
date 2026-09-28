@@ -23,7 +23,7 @@ Note. Figure 4.1 shows the four-phase transfer learning workflow used in Google 
 ### Technical Diagram (Mermaid Flowchart)
 
 ```mermaid
-%%{init: {"flowchart": {"wrappingWidth": 420, "nodeSpacing": 30, "rankSpacing": 40}}}%%
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#EEF3FB", "primaryBorderColor": "#4C72B0", "primaryTextColor": "#1A1A1A", "secondaryColor": "#FFF6E5", "tertiaryColor": "#F7F7F7", "lineColor": "#444444", "fontFamily": "arial, sans-serif", "fontSize": "15px", "edgeLabelBackground": "#FFFFFF", "clusterBkg": "#F7F7F7", "clusterBorder": "#9A9A9A", "actorBkg": "#EEF3FB", "actorBorder": "#4C72B0", "actorTextColor": "#1A1A1A", "actorLineColor": "#9A9A9A", "signalColor": "#333333", "signalTextColor": "#1A1A1A", "noteBkgColor": "#F2F2F2", "noteBorderColor": "#9A9A9A", "labelBoxBkgColor": "#F2F2F2", "labelBoxBorderColor": "#9A9A9A", "loopTextColor": "#1A1A1A", "activationBkgColor": "#EEF3FB"}, "flowchart": {"wrappingWidth": 420, "nodeSpacing": 30, "rankSpacing": 40}, "fontFamily": "arial, sans-serif"}}%%
 flowchart TD
     BASE["<b>Starting model</b><br/>MobileNetV2 backbone with ImageNet weights (224 × 224 input)<br/>+ new classifier head: Dense 512 → Dropout 0.5 → Dense 256 → Dropout 0.3 → Softmax (24 classes)<br/>Balanced class weights in every phase"]
 

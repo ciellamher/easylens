@@ -53,8 +53,8 @@ Note. Figure 3.9 shows the customized Rapid Application Development (RAD) lifecy
 ### Technical Diagram (Mermaid)
 
 ```mermaid
-%%{init: {"flowchart": {"wrappingWidth": 300, "nodeSpacing": 45, "rankSpacing": 60}}}%%
-flowchart LR
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#EEF3FB", "primaryBorderColor": "#4C72B0", "primaryTextColor": "#1A1A1A", "secondaryColor": "#FFF6E5", "tertiaryColor": "#F7F7F7", "lineColor": "#444444", "fontFamily": "arial, sans-serif", "fontSize": "15px", "edgeLabelBackground": "#FFFFFF", "clusterBkg": "#F7F7F7", "clusterBorder": "#9A9A9A", "actorBkg": "#EEF3FB", "actorBorder": "#4C72B0", "actorTextColor": "#1A1A1A", "actorLineColor": "#9A9A9A", "signalColor": "#333333", "signalTextColor": "#1A1A1A", "noteBkgColor": "#F2F2F2", "noteBorderColor": "#9A9A9A", "labelBoxBkgColor": "#F2F2F2", "labelBoxBorderColor": "#9A9A9A", "loopTextColor": "#1A1A1A", "activationBkgColor": "#EEF3FB"}, "flowchart": {"wrappingWidth": 460, "nodeSpacing": 45, "rankSpacing": 60}, "fontFamily": "arial, sans-serif"}}%%
+flowchart TB
     P1["<b>Phase 1: Requirements Planning</b><br/>• Define assistive goals for visually impaired pedestrians<br/>• Set evaluation criteria (usability and system quality)<br/>• Select low-cost hardware: ESP32-CAM glasses and a smartphone"]
 
     P2["<b>Phase 2: User Design</b><br/>• Voice-first, accessible app screens<br/>• Large text and high-contrast themes<br/>• Smart-glasses enclosure design"]
@@ -92,7 +92,7 @@ Note. Figure 3.10 shows the simplified user journey in EasyLens: connecting the 
 ### Technical Diagram (Mermaid)
 
 ```mermaid
-%%{init: {"flowchart": {"wrappingWidth": 260, "nodeSpacing": 30, "rankSpacing": 45}}}%%
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#EEF3FB", "primaryBorderColor": "#4C72B0", "primaryTextColor": "#1A1A1A", "secondaryColor": "#FFF6E5", "tertiaryColor": "#F7F7F7", "lineColor": "#444444", "fontFamily": "arial, sans-serif", "fontSize": "15px", "edgeLabelBackground": "#FFFFFF", "clusterBkg": "#F7F7F7", "clusterBorder": "#9A9A9A", "actorBkg": "#EEF3FB", "actorBorder": "#4C72B0", "actorTextColor": "#1A1A1A", "actorLineColor": "#9A9A9A", "signalColor": "#333333", "signalTextColor": "#1A1A1A", "noteBkgColor": "#F2F2F2", "noteBorderColor": "#9A9A9A", "labelBoxBkgColor": "#F2F2F2", "labelBoxBorderColor": "#9A9A9A", "loopTextColor": "#1A1A1A", "activationBkgColor": "#EEF3FB"}, "flowchart": {"wrappingWidth": 260, "nodeSpacing": 30, "rankSpacing": 45}, "fontFamily": "arial, sans-serif"}}%%
 flowchart TD
     START(["User turns on the smart glasses and opens Buddy"])
     WIFI["Join the 'EasyLens-Camera' Wi-Fi in phone settings, then tap Connect<br/>(the phone camera is used if the glasses are not connected)"]
@@ -114,11 +114,10 @@ flowchart TD
     REPEAT(["Repeat for the next frame"])
 
     OCR_OUT["Reads the text aloud<br/>(English / Filipino)"]
-    BUDDY_OUT["Answers by voice:<br/>Gemma 2B on the phone (Local AI mode, default)<br/>or Gemini online (online mode, chosen by the user)"]
+    BUDDY_OUT["Answers by voice:<br/>Gemma 2B on the phone (Local AI mode, default)<br/>or Google Gemini (online mode, and some Filipino questions)"]
     NAV_OUT["Speaks turn-by-turn steps and<br/>alerts the user near each turn (GPS)"]
 
-    COUNT{"Cancelled within<br/>5 seconds?"}
-    SOS_CANCEL["SOS cancelled"]
+    COUNT["5-second countdown<br/>(tap Cancel to stop the alert)"]
     SOS_SEND["SMS with Google Maps location link<br/>sent to emergency contacts"]
 
     START --> WIFI --> DASH --> CHOICE
@@ -143,6 +142,10 @@ flowchart TD
     NAV --> NAV_OUT
 
     SOS --> COUNT
-    COUNT -->|Yes| SOS_CANCEL
-    COUNT -->|No| SOS_SEND
+    COUNT -->|Not cancelled| SOS_SEND
+
+    classDef decision fill:#FFF6E5,stroke:#DD8452,color:#1A1A1A
+    classDef terminal fill:#F2F2F2,stroke:#555555,color:#1A1A1A
+    class CHOICE,HAZ decision
+    class START,REPEAT terminal
 ```
