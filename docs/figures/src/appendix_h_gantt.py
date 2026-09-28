@@ -43,7 +43,7 @@ TASKS = [
  (4, "CI/CD pipeline and Docker landing page",           "2026-07-16", "2026-07-25"),
  (4, "App releases v21–v25 (APK/IPA)",                   "2026-08-04", "2026-08-23"),
  (5, "Participant onboarding and informed consent",      "2026-07-01", "2026-07-10"),
- (5, "Walking trials with end-users (N = 15)",           "2026-07-10", "2026-08-05"),
+ (5, "Walking trials with end-users (N = 15)",           "2026-07-20", "2026-08-04"),
  (5, "WEAR comfort and thermal safety check",            "2026-07-15", "2026-08-10"),
  (5, "ISO/IEC 25010 expert evaluation (N = 5)",          "2026-07-20", "2026-08-12"),
  (5, "Data encoding and Likert analysis",                "2026-08-01", "2026-08-18"),
