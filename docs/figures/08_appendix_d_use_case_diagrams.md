@@ -76,7 +76,7 @@ UC8 --> Contact
 Figure D.2
 Detailed Architectural Use Case Diagram
 
-Note. Figure D.2 shows all user-facing use cases, their «include» and «extend» relationships, and the external systems each one uses. Use cases marked «online» need internet; those marked «online mode» need it only when the user switches Buddy from Local AI mode (the default) to online mode.
+Note. Figure D.2 shows all user-facing use cases, their «include» and «extend» relationships, and the external systems each one uses. Use cases marked «online» need internet; those marked «online mode» need it when the user switches Buddy from Local AI mode (the default) to online mode, and some Filipino questions also go to Gemini.
 ```
 
 ### Source (PlantUML)
@@ -115,11 +115,13 @@ actor "Firebase" as Firebase
 actor "GitHub Releases" as GitHub
 actor "ESP32-CAM\nSmart Glasses" as Glasses
 actor "Google ML Kit\n(on-device)" as MLKit
-actor "Google Gemini\n(online)" as Gemini
+actor "Google Gemini\n(online mode, some Filipino\nquestions, journal notes)" as Gemini
 actor "Google Places" as Places
 actor "OSRM" as OSRM
 actor "SMS\n(phone SIM;\nMensaHero gateway\nas fallback)" as SMS
 actor "Emergency\nContact" as Contact
+actor "Notion\n(feedback copy)" as Notion
+
 
 rectangle "EasyLens System (Buddy App + Smart Glasses)" {
   package "Account and App" {
@@ -146,7 +148,8 @@ rectangle "EasyLens System (Buddy App + Smart Glasses)" {
   }
   package "Buddy Assistant" {
     usecase "Talk to Buddy\n(Local AI mode: Gemma 2B on the phone, default;\nonline mode: Gemini)" as Talk <<online mode>>
-    usecase "Search Knowledge Base\n(TF-IDF)" as KB
+    usecase "Search Knowledge Base\nand Journals (TF-IDF)" as KB
+    usecase "Write Journal Entry\n(phone)" as Journal
   }
   package "Navigation" {
     usecase "Plan Route\n(Google Places search,\nOSRM routing)" as Route <<online>>
@@ -158,6 +161,8 @@ rectangle "EasyLens System (Buddy App + Smart Glasses)" {
     usecase "Cancel within\n5 Seconds" as Cancel
   }
 }
+
+
 
 User --> SignUp
 User --> Onboard
@@ -181,6 +186,7 @@ Nav ..> Alert : <<include>>
 Recognize <.. Register : <<extend>>
 Register ..> Consent : <<include>>
 Talk ..> KB : <<include>>
+Talk ..> Journal : <<include>>
 SOS ..> GPS : <<include>>
 SOS <.. Cancel : <<extend>>
 
@@ -194,6 +200,8 @@ Talk ----> Gemini
 SignUp ----> Firebase
 Onboard ----> Firebase
 Feedback ----> Firebase
+Feedback ----> Notion
+Journal ----> Gemini
 Route ----> Places
 Route ----> OSRM
 Updates ----> GitHub
@@ -202,8 +210,8 @@ SMS -> Contact
 
 legend right
   <<online>>  needs internet
-  <<online mode>>  needs internet only when the user
-  switches Buddy from Local AI mode to online mode
+  <<online mode>>  needs internet in online mode;
+  some Filipino questions also go to Gemini
   Unmarked use cases work without internet
   (Local AI mode needs a one-time Gemma 2B download).
 endlegend
@@ -219,7 +227,7 @@ endlegend
 | Sign Up / Log In | Visually Impaired User | Creates or opens an account with email and password or Google Sign-In through Firebase Authentication. | No |
 | Complete Onboarding | Visually Impaired User | Voice-guided sign-up steps: language, visual conditions, mobility aid, contrast theme, voice persona, units and an emergency contact. The answers are saved to Firebase Firestore. | No |
 | Change Settings | Visually Impaired User | Changes language, contrast theme, voice persona, units, haptics and voice feedback. Settings are stored on the phone. | Yes |
-| Send Feedback | Visually Impaired User | Submits the in-app feedback survey, saved to the Firestore `feedbacks` collection. | No |
+| Send Feedback | Visually Impaired User | Submits the in-app feedback survey (rating, subject, comment, with the user's name and email). It is saved in Firestore and a copy is sent to a Notion database. | No |
 | Check for Updates | Visually Impaired User | Asks the GitHub Releases API for the latest release and shows its version, release notes and APK download link. | No |
 | Connect Glasses | Visually Impaired User | The user joins the glasses' "EasyLens-Camera" Wi-Fi in phone settings, then taps Connect; the app reads the camera stream at 192.168.4.1:81/stream. The phone camera can be used instead. The glasses' Wi-Fi is local, so no internet is needed. | Yes |
 | Navigate with Hazard Warnings | Visually Impaired User | Scans camera frames for obstacles and hazards and warns the user. | Yes |
@@ -232,8 +240,9 @@ endlegend
 | Recognize People | Visually Impaired User | Detects faces with ML Kit and matches them against faces registered on the phone, then announces the person's name. | Yes |
 | Register Face | Visually Impaired User | Captures front, left and right views of a person's face and saves the name and face measurements on the phone only. | Yes |
 | Confirm RA 10173 Consent | (included) | Requires ticking the Data Privacy Act (RA 10173) consent box before a face can be registered. | Yes |
-| Talk to Buddy | Visually Impaired User | Answers spoken questions with Gemma 2B on the phone (Local AI mode, the default) or Google Gemini (online mode, chosen by the user). | Partly |
-| Search Knowledge Base (TF-IDF) | (included) | Finds the most relevant entries in Buddy's built-in knowledge base with TF-IDF and adds them to the question. | Yes |
+| Talk to Buddy | Visually Impaired User | Answers spoken questions with Gemma 2B on the phone (Local AI mode, the default) or Google Gemini (online mode, chosen by the user). Some Filipino questions are sent to Gemini in either mode. | Partly |
+| Search Knowledge Base and Journals (TF-IDF) | (included) | Finds the most relevant entries in Buddy's built-in knowledge base and in the last seven days of journals with TF-IDF, and adds them to the question. | Yes |
+| Write Journal Entry | (included) | Appends each question and answer to that day's journal file on the phone. When the phone is online, the exchange is also sent to Gemini to write a short note about the user; offline, a simple note is written instead. | Partly |
 | Plan Route | Visually Impaired User | Searches for the destination with Google Places and gets the route from OSRM. | No |
 | Get Turn-by-Turn Guidance | Visually Impaired User | Follows the user's GPS position along the route and speaks each turn. Needs a route already loaded; the map background needs internet. | Partly |
 | Send SOS Alert | Visually Impaired User | After a 5-second countdown, sends an SMS with a Google Maps link to the user's location to the emergency contact. It uses the phone's SIM first; the MensaHero internet gateway is only a fallback. | Yes |

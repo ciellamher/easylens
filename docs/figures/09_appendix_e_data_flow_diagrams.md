@@ -61,7 +61,7 @@ digraph E1 {
 Figure E.2
 Proposed EasyLens Wearable Edge-AI System Detailed Data Flow Diagram
 
-Note. Figure E.2 shows how data moves through EasyLens. Camera frames from the smart glasses reach the phone over the glasses' own Wi-Fi and are processed on the phone by Google ML Kit and an SSD MobileNet model. Results are spoken and signaled by vibration. Buddy answers questions with Gemma 2B on the phone by default, or with Google Gemini when the user chooses online mode. Settings, emergency contacts and registered faces are stored on the phone; registered faces are never uploaded. Account data, preferences, contacts and feedback are sent to Firebase, an optional profile photo is stored in Cloudflare R2, and route searches go to Google Places and OSRM. The Visually Impaired User entity appears twice to keep the diagram readable.
+Note. Figure E.2 shows how data moves through EasyLens. Camera frames from the smart glasses reach the phone over the glasses' own Wi-Fi and are processed on the phone by Google ML Kit and an SSD MobileNet model. Results are spoken and signaled by vibration. Buddy answers questions with Gemma 2B on the phone by default, or with Google Gemini when the user chooses online mode; some Filipino questions are also sent to Gemini, and each exchange is sent to Gemini to write a short journal note when the phone is online. Buddy's conversations and notes are kept as daily journal files on the phone (D4), and the last seven days are searched together with the knowledge base. Settings, emergency contacts and registered faces are stored on the phone; registered faces are never uploaded. Account data, preferences, emergency contacts and feedback are sent to Firebase, feedback is also copied to Notion, an optional profile photo is stored in Cloudflare R2, and route searches go to Google Places and OSRM. The Visually Impaired User entity appears twice to keep the diagram readable.
 ```
 
 ### Source (Graphviz)
@@ -78,7 +78,8 @@ digraph E2 {
   User    [label="Visually Impaired\nUser"];
   User2   [label="Visually Impaired\nUser"];
   GPS     [label="Phone GPS"];
-  Gemini  [label="Google Gemini\n(online mode only)"];
+  Gemini  [label="Google Gemini\n(online mode, some Filipino\nquestions, journal notes)"];
+  Notion  [label="Notion\n(feedback copy)"];
   Maps    [label="Google Places\nand OSRM"];
   Firebase[label="Firebase\n(Auth, Firestore)"];
   Contact [label="Emergency\nContact"];
@@ -100,6 +101,7 @@ digraph E2 {
   node [shape=plaintext, style="", fillcolor=white];
   D1 [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" color="#555555"><tr><td bgcolor="#F2F2F2"><b>D1</b></td><td sides="TBR">Settings and Emergency Contacts (phone)</td></tr></table>>];
   D2 [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" color="#555555"><tr><td bgcolor="#F2F2F2"><b>D2</b></td><td sides="TBR">Registered Faces (phone only)</td></tr></table>>];
+  D4 [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" color="#555555"><tr><td bgcolor="#F2F2F2"><b>D4</b></td><td sides="TBR">Interaction Journals (phone)</td></tr></table>>];
   D3 [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" color="#555555"><tr><td bgcolor="#F2F2F2"><b>D3</b></td><td sides="TBR">Buddy Knowledge Base (bundled)</td></tr></table>>];
 
   // Vision pipeline
@@ -117,9 +119,12 @@ digraph E2 {
   // Buddy
   User -> P5 [label="spoken question"];
   D3 -> P5 [label="matching entries"];
-  P5 -> Gemini [label="question + context"];
+  P5 -> Gemini [label="question + context\n(+ camera image in online mode);\nexchange for journal note"];
   Gemini -> P5 [label="answer"];
   P5 -> P6 [label="answer text"];
+  P5 -> D4 [label="question, answer,\njournal note"];
+  D4 -> P5 [label="matching journal entries\n(last 7 days)"];
+  P7 -> D4 [label="visited place"];
 
   // Navigation
   User -> P7 [label="destination"];
@@ -140,6 +145,7 @@ digraph E2 {
   P9 -> Firebase [label="profile, preferences,\ncontacts, feedback"];
   Firebase -> P9 [label="login, saved profile"];
   P9 -> R2 [label="profile photo\n(optional)"];
+  P9 -> Notion [label="feedback"];
   D1 -> P6 [label="language, voice"];
 
   P6 -> User2 [label="speech and vibration"];
