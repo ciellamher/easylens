@@ -1,4 +1,6 @@
-# Appendix E: Current & Proposed Data Flow Diagrams (DFD)
+# Appendix E: Current and Proposed Data Flow Diagrams
+
+Both diagrams are drawn with Graphviz using standard DFD notation: bold squares are external entities, rounded boxes are numbered processes, open-ended boxes (D1–D3) are data stores, and arrows are labeled with the data that moves. Figure E.2 is checked against the current code (`upstream/main`, commit `c10062e`).
 
 ---
 
@@ -7,41 +9,43 @@
 ### APA 7th Citation & Metadata
 - **Figure Number**: Figure E.1
 - **Figure Title**: *Current Baseline System Detailed Data Flow Diagram*
-- **Manuscript Page**: 180
-- **PDF Page**: 188
-- **Image Asset**: [fig_e_1_baseline_dfd.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_e_1_baseline_dfd.png)
+- **Image Asset**: [fig_e_1_baseline_dfd.png](assets/fig_e_1_baseline_dfd.png)
 
 ```
 Figure E.1
 Current Baseline System Detailed Data Flow Diagram
 
-Note. Figure E.1 illustrates the traditional cloud-reliant assistive application pipeline, highlighting the severe latency bottlenecks caused by continuous image uploading to remote servers.
+Note. Figure E.1 shows the data flow of a typical handheld, cloud-based assistive app. The user points the phone camera and taps to take a photo, the photo is uploaded to a remote vision service over the internet, and the returned label or text is read aloud. Each result needs a manual capture and an internet connection.
 ```
 
----
+### Source (Graphviz)
 
-### Technical Diagram (Mermaid Level-1 DFD)
+```dot
+digraph E1 {
+  graph [rankdir=TB, fontname="Helvetica", nodesep=0.7, ranksep=0.55, dpi=220, pad=0.3, bgcolor=white];
+  node  [fontname="Helvetica", fontsize=11];
+  edge  [fontname="Helvetica", fontsize=10, color="#444444"];
 
-```mermaid
-flowchart LR
-    USER["External Entity:\nUser / Patient"]
-    CLOUD["External Entity:\nRemote Vision Cloud API"]
-    STORE[("Data Store:\nLocal Saved Images")]
+  User  [shape=box, style="filled,bold", fillcolor="#F2F2F2", label="Visually Impaired\nUser", width=1.7, height=0.7];
+  Cloud [shape=box, style="filled,bold", fillcolor="#F2F2F2", label="Remote Cloud\nVision Service", width=1.7, height=0.7];
 
-    subgraph BASELINE_PIPELINE ["Traditional Cloud-Dependent Assistive Pipeline"]
-        P1["1.0 Manual Image Capture Process"]
-        P2["2.0 Cloud Payload Serializer"]
-        P3["3.0 Remote Cloud Processing Engine"]
-        P4["4.0 Monolithic Voice Generator"]
-    end
+  node [shape=box, style="rounded,filled", fillcolor="#EEF3FB", color="#4C72B0", width=2.2];
+  P1 [label=<<b>1.0</b><br/>Capture Photo<br/><font point-size="9">(user points the handheld<br/>phone camera and taps)</font>>];
+  P2 [label=<<b>2.0</b><br/>Upload Photo>];
+  P3 [label=<<b>3.0</b><br/>Receive Result>];
+  P4 [label=<<b>4.0</b><br/>Speak Result<br/><font point-size="9">(phone text-to-speech)</font>>];
 
-    USER -->|"Manual Button Tap"| P1
-    P1 -->|"Raw JPEG Buffer"| P2
-    P1 -->|"Save Snapshots"| STORE
-    P2 -->|"HTTP REST POST (Base64 JPEG)"| CLOUD
-    CLOUD -->|"JSON Classification Response\n(High Latency: 1,500–4,000 ms)"| P3
-    P3 -->|"Parsed Category String"| P4
-    P4 -->|"Monolithic Audio TTS Stream"| USER
+  D1 [shape=plaintext, style="",  label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="6" color="#555555"><tr><td bgcolor="#F2F2F2"><b>D1</b></td><td sides="TBR" width="110">Saved Photos</td></tr></table>>];
+
+  User -> P1 [label=" button tap"];
+  P1 -> P2 [label=" photo"];
+  P1 -> D1 [label=" photo", style=dashed];
+  P2 -> Cloud [label=" photo over the internet"];
+  Cloud -> P3 [label=" label or recognized text"];
+  P3 -> P4 [label=" result text"];
+  P4 -> User [label=" spoken result", constraint=false];
+  {rank=same; P1; D1}
+}
 ```
 
 ---
@@ -51,93 +55,96 @@ flowchart LR
 ### APA 7th Citation & Metadata
 - **Figure Number**: Figure E.2
 - **Figure Title**: *Proposed EasyLens Wearable Edge-AI System Detailed Data Flow Diagram*
-- **Manuscript Page**: 181
-- **PDF Page**: 189
-- **Image Asset**: [fig_e_2_proposed_edge_ai_dfd.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_e_2_proposed_edge_ai_dfd.png)
+- **Image Asset**: [fig_e_2_proposed_dfd.png](assets/fig_e_2_proposed_dfd.png)
 
 ```
 Figure E.2
 Proposed EasyLens Wearable Edge-AI System Detailed Data Flow Diagram
 
-Note. Figure E.2 presents the comprehensive Level-1 and Level-2 data flow diagram of the proposed EasyLens wearable edge-AI system, demonstrating the localized real-time data streaming, parallel Dart Isolate processing, on-device machine learning inference, and asynchronous cloud synchronization tiers.
+Note. Figure E.2 shows how data moves through EasyLens. Camera frames from the smart glasses reach the phone over the glasses' own Wi-Fi and are processed on the phone by Google ML Kit and an SSD MobileNet model. Results are spoken and signaled by vibration. Buddy answers questions with Gemma 2B on the phone by default, or with Google Gemini when the user chooses online mode. Settings, emergency contacts and registered faces are stored on the phone; registered faces are never uploaded. Account data, preferences, contacts and feedback are sent to Firebase, an optional profile photo is stored in Cloudflare R2, and route searches go to Google Places and OSRM. The Visually Impaired User entity appears twice to keep the diagram readable.
 ```
 
----
+### Source (Graphviz)
 
-### Technical Diagram (Mermaid Detailed Architecture DFD)
+```dot
+digraph E2 {
+  graph [rankdir=TB, fontname="Helvetica", nodesep=0.45, ranksep=0.7, dpi=200, pad=0.3, bgcolor=white, newrank=true];
+  node  [fontname="Helvetica", fontsize=11];
+  edge  [fontname="Helvetica", fontsize=9, color="#444444"];
 
-```mermaid
-flowchart TD
-    subgraph HW ["1.0 Physical Wearable Hardware Unit"]
-        direction TB
-        CAM["ESP32-CAM OV2640 Sensor (70° Lens)"]
-        PWR["1,500 mAh Keychain Powerbank (5V)"]
-        SINK["Passive Aluminum Heatsink Dissipation"]
-    end
+  // External entities
+  node [shape=box, style="filled,bold", fillcolor="#F2F2F2", color="#222222", width=1.6];
+  Glasses [label="ESP32-CAM Smart Glasses\n(phone camera as fallback)"];
+  User    [label="Visually Impaired\nUser"];
+  User2   [label="Visually Impaired\nUser"];
+  GPS     [label="Phone GPS"];
+  Gemini  [label="Google Gemini\n(online mode only)"];
+  Maps    [label="Google Places\nand OSRM"];
+  Firebase[label="Firebase\n(Auth, Firestore)"];
+  Contact [label="Emergency\nContact"];
+  R2      [label="Cloudflare R2\n(profile photo storage)"];
 
-    subgraph NET ["2.0 Wireless Transport Protocol"]
-        WIFI["Wi-Fi AP Video Stream (192.168.4.1:81/stream)\nMJPEG Byte Stream @ 30 FPS"]
-    end
+  // Processes
+  node [shape=box, style="rounded,filled", fillcolor="#EEF3FB", color="#4C72B0", fontsize=10.5, width=2.0];
+  P1 [label=<<b>1.0</b><br/>Receive Camera Frames<br/><font point-size="8.5">MJPEG over the glasses' own Wi-Fi</font>>];
+  P2 [label=<<b>2.0</b><br/>Detect Hazards and Objects<br/><font point-size="8.5">ML Kit object detection and labeling;<br/>SSD MobileNet in Object Detection mode</font>>];
+  P3 [label=<<b>3.0</b><br/>Read Text<br/><font point-size="8.5">ML Kit text recognition</font>>];
+  P4 [label=<<b>4.0</b><br/>Recognize and Register Faces<br/><font point-size="8.5">ML Kit face detection, on-phone matching</font>>];
+  P5 [label=<<b>5.0</b><br/>Answer with Buddy<br/><font point-size="8.5">speech-to-text, TF-IDF search,<br/>Gemma 2B (default) or Gemini</font>>];
+  P6 [label=<<b>6.0</b><br/>Speak and Vibrate<br/><font point-size="8.5">text-to-speech, vibration</font>>];
+  P7 [label=<<b>7.0</b><br/>Plan and Guide Route>];
+  P8 [label=<<b>8.0</b><br/>Send SOS Alert<br/><font point-size="8.5">5-second countdown</font>>];
+  P9 [label=<<b>9.0</b><br/>Manage Account and Settings>];
 
-    subgraph ENGINE ["3.0 EasyLens Mobile Processing Engine (Flutter Core)"]
-        direction TB
-        
-        P31["3.1 MJPEG Frame Ingestion & Buffer"]
-        P32["3.2 Dart Parallel Isolate Worker\n(Resize to 300x300 Matrix & Normalize)"]
+  // Data stores (on the phone)
+  node [shape=plaintext, style="", fillcolor=white];
+  D1 [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" color="#555555"><tr><td bgcolor="#F2F2F2"><b>D1</b></td><td sides="TBR">Settings and Emergency Contacts (phone)</td></tr></table>>];
+  D2 [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" color="#555555"><tr><td bgcolor="#F2F2F2"><b>D2</b></td><td sides="TBR">Registered Faces (phone only)</td></tr></table>>];
+  D3 [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="5" color="#555555"><tr><td bgcolor="#F2F2F2"><b>D3</b></td><td sides="TBR">Buddy Knowledge Base (bundled)</td></tr></table>>];
 
-        subgraph AI_STACK ["3.3 Hybrid Edge-AI Vision Stack"]
-            direction TB
-            TFLITE["TFLite MobileNetV2 SSD (24 Classes)\nInfer in 13–18 ms"]
-            OCR["Google ML Kit SDK (OCR & Text Extraction)"]
-            GEMMA["Google Gemma-IT 2B INT4 (Local Offline LLM)"]
-            GEMINI["Google Gemini 3.6 Flash Low (Cloud Fallback)"]
-        end
+  // Vision pipeline
+  Glasses -> P1 [label="camera frames"];
+  P1 -> P2 [label="frame"];
+  P1 -> P3 [label="frame"];
+  P1 -> P4 [label="frame"];
+  P2 -> P6 [label="hazard, direction,\nobject labels"];
+  P3 -> P6 [label="recognized text"];
+  P4 -> P6 [label="person's name"];
+  D2 -> P4 [label="face data"];
+  P4 -> D2 [label="new face + name\n(after RA 10173 consent)"];
+  P2 -> P5 [label="scene labels\n(Describe Scene)"];
 
-        subgraph FEEDBACK ["3.4 Multimodal Feedback Engine"]
-            direction TB
-            MGR["Priority Audio Manager (Hazard Overrides)"]
-            TTS["Spatial Voice TTS (English & Tagalog Alerts)"]
-            HAPTIC["Tactile Haptic Engine (Vibration Patterns)"]
-        end
-    end
+  // Buddy
+  User -> P5 [label="spoken question"];
+  D3 -> P5 [label="matching entries"];
+  P5 -> Gemini [label="question + context"];
+  Gemini -> P5 [label="answer"];
+  P5 -> P6 [label="answer text"];
 
-    subgraph USER_LAYER ["5.0 User Interaction Layer"]
-        direction TB
-        U_ACT["Visually Impaired Pedestrian"]
-        STT["Hands-Free Speech-to-Text Driver"]
-        LOCAL_DB[("Local SQLite Database\n(Preferences, Contacts, Incident Logs)")]
-    end
+  // Navigation
+  User -> P7 [label="destination"];
+  P7 -> Maps [label="search text,\nstart and end points"];
+  Maps -> P7 [label="places, route steps"];
+  GPS -> P7 [label="position"];
+  P7 -> P6 [label="turn instruction"];
 
-    subgraph CLOUD_LAYER ["4.0 Cloud & Storage Infrastructure Tier"]
-        direction TB
-        D1[("Cloudflare D1 Serverless SQL\n(Incident Telemetry)")]
-        R2[("Cloudflare R2 Bucket\n(AWS SigV4 Signed Snapshots)")]
-        FB["Firebase Suite (Auth & Firestore Sync)"]
-    end
+  // SOS
+  User -> P8 [label="SOS press / cancel"];
+  GPS -> P8 [label="position"];
+  D1 -> P8 [label="contact numbers"];
+  P8 -> Contact [label="SMS with Google Maps link\n(SIM; MensaHero fallback)"];
 
-    %% Data Flows
-    HW -->|"Raw Video Stream"| NET
-    NET -->|"Byte Stream"| P31
-    P31 -->|"Raw Frame Array"| P32
-    P32 -->|"300x300 Matrix"| TFLITE
-    P32 -->|"High-Res Crop"| OCR
-    TFLITE -->|"Bounding Boxes & Hazard Scores"| MGR
-    OCR -->|"Parsed Text String"| MGR
-    GEMMA -->|"Offline Natural Dialogue"| MGR
-    GEMINI -->|"Tagalog / Rich Dialogue"| MGR
+  // Account
+  User -> P9 [label="sign-up answers,\nsettings, feedback"];
+  P9 -> D1 [label="settings, contacts"];
+  P9 -> Firebase [label="profile, preferences,\ncontacts, feedback"];
+  Firebase -> P9 [label="login, saved profile"];
+  P9 -> R2 [label="profile photo\n(optional)"];
+  D1 -> P6 [label="language, voice"];
 
-    MGR -->|"Voice Queue"| TTS
-    MGR -->|"Proximity Signal"| HAPTIC
+  P6 -> User2 [label="speech and vibration"];
 
-    TTS -->|"Spatial Audio Alerts"| U_ACT
-    HAPTIC -->|"Tactile Proximity Feedback"| U_ACT
-
-    U_ACT -->|"Spoken Voice Commands"| STT
-    STT -->|"Parsed Intent String"| GEMMA
-    STT -->|"Complex Query Fallback"| GEMINI
-
-    U_ACT <-->|"Read / Write Settings"| LOCAL_DB
-    LOCAL_DB -.->|"Async REST Sync"| D1
-    P31 -.->|"Direct Signed Media Upload"| R2
-    U_ACT -.->|"Auth Tokens"| FB
+  {rank=same; User; Glasses; GPS}
+  {rank=sink; User2}
+}
 ```
