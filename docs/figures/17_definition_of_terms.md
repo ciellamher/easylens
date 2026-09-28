@@ -1,0 +1,27 @@
+# Definition of Terms (new entries, RF-13)
+
+Checked against the code (`upstream/main`, commit `c10062e`) and the training notebook. Merge into the existing list in alphabetical order; skip terms already defined.
+
+| Term | General Definition | Use in This Study |
+|---|---|---|
+| Balanced Accuracy | The average of the recall scores of all classes, so that each class counts equally regardless of its size. | Measured how well the custom classifier recognized all 24 hazard classes, including the smaller ones. |
+| COCO (Common Objects in Context) | A large public image dataset of everyday objects with 80 object categories, widely used to train object detection models (Lin et al., 2014). | The SSD MobileNet model used for live detection in Buddy was pretrained on COCO. |
+| Confusion Matrix | A table that compares a model's predicted classes with the true classes, showing which classes are correctly recognized and which are confused with one another. | Used to examine the custom classifier's errors on the test set. *(Include only if the Results show one.)* |
+| Cosine Similarity | A measure of how similar two sets of values are, based on the angle between them as vectors; values closer to 1 mean greater similarity. | Ranks the entries of Buddy's knowledge base and journals by how closely they match the user's question. |
+| CRISP-DM (Cross-Industry Standard Process for Data Mining) | A six-phase framework for data mining and machine learning projects: business understanding, data understanding, data preparation, modeling, evaluation and deployment (Brzozowska et al., 2023). | Structured the development of the custom MobileNetV2 classifier. |
+| Dart Isolate | A separate thread of execution in the Dart language that runs work in the background without freezing the app's interface. | SSD MobileNet inference in Object Detection mode with the phone camera runs on a Dart Isolate. |
+| Edge Computing | Processing data on or near the device where it is collected instead of on a remote server. | Hazard and object detection run on the user's smartphone rather than in the cloud. |
+| Inference Time | The time a trained model takes to produce a prediction for one input. | The average time per image (2.48 milliseconds) measured during batched evaluation on an NVIDIA T4 GPU in Google Colab, not the time on a smartphone. |
+| ISO/IEC 25010:2023 | An international standard that defines the quality characteristics of software products, such as functional suitability, performance efficiency and reliability. | Six of its characteristics formed the basis of the researcher-made checklists. |
+| JPEG (Joint Photographic Experts Group) | A common compressed image format. | The ESP32-CAM streams video to the phone as a continuous series of JPEG frames. |
+| Local AI Mode | — | Buddy's default setting, in which questions are answered by the Gemma 2B model on the phone instead of Google Gemini online; some Filipino questions and journal notes are still sent to Gemini when the phone is online. |
+| Mann–Whitney U Test | A nonparametric test that compares two independent groups without assuming normally distributed data (Mann & Whitney, 1947). | Compared the composite scores of the end-users and the experts. |
+| MobileNetV2 | A lightweight convolutional neural network designed for mobile devices. | An ImageNet-pretrained MobileNetV2 was the backbone of the custom 24-class classifier, which was trained and evaluated offline and not integrated into Buddy. |
+| Retrieval-Augmented Generation (RAG) | A method in which relevant information is retrieved from a knowledge source and added to a language model's prompt before it answers. | Buddy retrieves entries from its knowledge base and recent journals and adds them to the question before Gemma or Gemini answers. |
+| SSD MobileNet | An object detection model that combines the Single Shot MultiBox Detector (SSD), which locates and labels objects in one pass, with a MobileNet backbone (Liu et al., 2016). | A COCO-pretrained SSD MobileNet model provides live detection in Buddy's Object Detection mode. |
+| TF-IDF (Term Frequency–Inverse Document Frequency) | A method that scores how important a word is to a document compared with a whole collection of documents. | Buddy uses TF-IDF on the phone to search its knowledge base and journals. |
+| Top-k Accuracy (Top-1, Top-2, Top-3) | The percentage of test images whose true class appears among a model's k highest-probability predictions; Top-1 counts only the single highest prediction. | Measured the custom classifier's performance on 2,125 test images. |
+| WCAG 2.2 (Web Content Accessibility Guidelines 2.2) | International guidelines for making digital content accessible, including minimum color contrast and touch target sizes (World Wide Web Consortium, 2024). | Guided Buddy's touch targets and high-contrast themes. |
+| Weighted Precision | The average of the precision scores of all classes, with each class weighted by its number of test images. | Measured how often the custom classifier's predictions were correct, accounting for class size. |
+| WGS-84 (World Geodetic System 1984) | The standard coordinate system used by GPS, which models the Earth with an equatorial radius of 6,378,137 meters. | Buddy uses WGS-84 coordinates and the Haversine formula to calculate distances during navigation. |
+| WPA2 (Wi-Fi Protected Access 2) | A security protocol that protects a Wi-Fi network with a password and encryption. | The glasses' Wi-Fi network does not use WPA2; adding it is recommended in Chapter 5. |
