@@ -36,7 +36,7 @@ Note. The dashboard's six action buttons: Talk to Buddy (Local AI), EasyLens, Re
 Figure K.3
 Nearby Text Reader and EasyLens Camera Modes
 
-Note. The Nearby Text reader (left) and the EasyLens camera screen in Navigation, Object Detection, Scenery and Face Recognition modes.
+Note. The Nearby Text reader (left) and the EasyLens camera screen in Navigation, Object Detection, Scenery and Face Recognition modes. The face and name in the Face Recognition screen are blurred for privacy.
 ```
 
 ---
