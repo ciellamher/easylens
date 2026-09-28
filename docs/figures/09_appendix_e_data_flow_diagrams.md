@@ -61,7 +61,7 @@ digraph E1 {
 Figure E.2
 Proposed EasyLens Wearable Edge-AI System Detailed Data Flow Diagram
 
-Note. Figure E.2 shows how data moves through EasyLens. Camera frames from the smart glasses reach the phone over the glasses' own Wi-Fi and are processed on the phone by Google ML Kit and an SSD MobileNet model. Results are spoken and signaled by vibration. Buddy answers questions with Gemma 2B on the phone by default, or with Google Gemini when the user chooses online mode; some Filipino questions are also sent to Gemini, and each exchange is sent to Gemini to write a short journal note when the phone is online. Buddy's conversations and notes are kept as daily journal files on the phone (D4), and the last seven days are searched together with the knowledge base. Settings, emergency contacts and registered faces are stored on the phone; registered faces are never uploaded. Account data, preferences, emergency contacts and feedback are sent to Firebase, feedback is also copied to Notion, an optional profile photo is stored in Cloudflare R2, and route searches go to Google Places and OSRM. The Visually Impaired User entity appears twice to keep the diagram readable.
+Note. Figure E.2 shows how data moves through EasyLens. Camera frames from the smart glasses reach the phone over the glasses' own Wi-Fi and are processed on the phone by Google ML Kit and an SSD MobileNet model. Results are spoken and signaled by vibration. Buddy answers questions with Gemma 2B on the phone by default, or with Google Gemini when the user chooses online mode; some Filipino questions are also sent to Gemini, and each exchange is sent to Gemini to write a short journal note when the phone is online. Buddy's conversations and notes are kept as daily journal files on the phone (D4), and the last seven days are searched together with the knowledge base. Settings, emergency contacts and registered faces are stored on the phone; registered faces are never uploaded. Account data, preferences, emergency contacts, recent destinations and feedback are sent to Firebase, feedback is also copied to Notion, an optional profile photo is stored in Cloudflare R2, and route searches go to Google Places and OSRM. The Visually Impaired User entity appears twice to keep the diagram readable.
 ```
 
 ### Source (Graphviz)
@@ -125,6 +125,7 @@ digraph E2 {
   P5 -> D4 [label="question, answer,\njournal note"];
   D4 -> P5 [label="matching journal entries\n(last 7 days)"];
   P7 -> D4 [label="visited place"];
+  P7 -> Firebase [label="recent destinations"];
 
   // Navigation
   User -> P7 [label="destination"];
