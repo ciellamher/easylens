@@ -1,173 +1,131 @@
-# Appendix K: Deployed Buddy Mobile Application Screen Walkthrough
+# Appendix K: Screenshots of the Buddy Mobile Application
 
 ---
 
-## Overview of Appendix K Figures (Figures K.1 – K.10)
+## Figure K.1: Splash, Sign-In and Welcome Screens
 
-This document provides complete architectural specifications, user flow breakdowns, and exact APA 7th metadata for all ten (10) high-fidelity screens of the Buddy mobile client application compiled from the Flutter codebase.
-
----
-
-## Figures K.1 & K.2: Splash Screen & Main Dashboard
-
-### APA 7th Metadata
-- **Figure K.1**: *Deployed Splash Screen and Initial Welcome Layout* (Manuscript Page 194, PDF Page 202)
-- **Figure K.2**: *Main Dashboard Six-Button Grid Interface* (Manuscript Page 194, PDF Page 202)
-- **Image Asset**: [fig_k_1_k_2_splash_dashboard.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_k_1_k_2_splash_dashboard.png)
+- **Image Asset**: [fig_k_01_splash_login_welcome.png](assets/fig_k_01_splash_login_welcome.png)
 
 ```
 Figure K.1
-Deployed Splash Screen and Initial Welcome Layout
+Splash, Sign-In and Welcome Screens
 
-Note. Figure K.1 showcases the production splash screen and account authentication gateway, supporting email/password sign-in and Google OAuth.
+Note. The app icon and splash screen, the sign-in screen (email or Google), the welcome screen after sign-up, and the first-use guide cards shown over the dashboard.
+```
 
+---
+
+## Figure K.2: Main Dashboard with Six Action Buttons
+
+- **Image Asset**: [fig_k_02_dashboard.png](assets/fig_k_02_dashboard.png)
+
+```
 Figure K.2
-Main Dashboard Six-Button Grid Interface
+Main Dashboard with Six Action Buttons
 
-Note. Figure K.2 presents the primary home dashboard featuring the personalized time-aware header greeting, Buddy animated mascot banner, and modular six-button assistive action grid.
+Note. The dashboard's six action buttons: Talk to Buddy (Local AI), EasyLens, Register Face, Nearby Text, Audio Navigation and SOS Emergency.
 ```
 
 ---
 
-### Dashboard Modular Grid Architecture
+## Figure K.3: Nearby Text Reader and EasyLens Camera Modes
 
-```mermaid
-graph TD
-    subgraph DASHBOARD ["BUDDY MAIN DASHBOARD ARCHITECTURE"]
-        direction TB
-
-        HDR["Header Bar: Time-Aware Greeting (e.g., 'Good evening, nini!')\n+ Real-Time Localized Date ('LUNES, AGOSTO 24')\n+ Notification Bell with Unread Badge Count"]
-
-        MASCOT["Animated Mascot Banner (Buddy)\n• Rotating contextual voice suggestions\n• Bilingual speech bubble prompts"]
-
-        subgraph GRID ["Six-Button Assistive Action Grid (56dp+ Tap Targets)"]
-            direction TB
-            B1["1. Talk to Buddy (Local AI)\n• On-device conversational speech assistant"]
-            B2["2. EasyLens Camera\n• Live ESP32-CAM optical perception stream"]
-            B3["3. Register Face\n• Offline facial recognition & identity registration"]
-            B4["4. Nearby Text\n• Google ML Kit optical character reader"]
-            B5["5. Audio Navigation\n• Clock-face GPS turn-by-turn guidance"]
-            B6["6. SOS Emergency\n• Automated emergency SMS & GPS broadcast"]
-        end
-
-        NAVBAR["Bottom Navigation Bar: Home | Audio Nav | EasyLens Cam | Settings"]
-    end
-
-    HDR --> MASCOT
-    MASCOT --> GRID
-    GRID --> NAVBAR
-```
-
----
-
-## Figures K.3 & K.4: Active Perception, SOS & Walking Navigation
-
-### APA 7th Metadata
-- **Figure K.3**: *Active Edge-AI Object Detection and Text Scanner Viewports* (Manuscript Page 195, PDF Page 203)
-- **Figure K.4**: *SOS Countdown and GPS Clock-Face Navigation Screens* (Manuscript Page 195, PDF Page 203)
-- **Image Asset**: [fig_k_3_k_4_detection_sos_nav.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_k_3_k_4_detection_sos_nav.png)
+- **Image Asset**: [fig_k_03_text_reader_camera_modes.png](assets/fig_k_03_text_reader_camera_modes.png)
 
 ```
 Figure K.3
-Active Edge-AI Object Detection and Text Scanner Viewports
+Nearby Text Reader and EasyLens Camera Modes
 
-Note. Figure K.3 displays the live camera viewports for real-time edge computer vision object classification and Google ML Kit OCR text scanning with high-contrast bounding boxes.
+Note. The Nearby Text reader (left) and the EasyLens camera screen in Navigation, Object Detection, Scenery and Face Recognition modes.
+```
 
+---
+
+## Figure K.4: SOS Countdown and Turn-by-Turn Navigation Screens
+
+- **Image Asset**: [fig_k_04_sos_navigation.png](assets/fig_k_04_sos_navigation.png)
+
+```
 Figure K.4
-SOS Countdown and GPS Clock-Face Navigation Screens
+SOS Countdown and Turn-by-Turn Navigation Screens
 
-Note. Figure K.4 exhibits the five-second emergency SOS countdown safety screen and the turn-by-turn clock-face walking navigation interface.
+Note. The SOS explanation card, 5-second countdown and sent confirmation, followed by the camera view during navigation, the destination search and the turn-by-turn route screen.
 ```
 
 ---
 
-### Live Perception & Safety State Flows
+## Figure K.5: Seventeen-Step Onboarding Setup
 
-```mermaid
-flowchart TD
-    subgraph PERCEPTION ["Live Camera Viewports (Figure K.3)"]
-        direction TB
-        V1["Object Detector Viewport\n• Real-time high-contrast bounding boxes\n• Colored hazard priority badges (Red/Amber/Green)\n• Proximity distance estimates in meters"]
-        V2["Text Scanner Viewport\n• Bounding box line grouping\n• 'Take Photo' high-contrast tactile button\n• Instant TTS readout overlay"]
-    end
-
-    subgraph EMERGENCY_NAV ["Emergency & Navigation Screens (Figure K.4)"]
-        direction TB
-        S1["SOS Countdown Viewport\n• Prominent circular 5-second countdown timer\n• Audible warning beeps\n• 'Cancel SOS' full-width cancel button"]
-        S2["Clock-Face GPS Navigation Viewport<br>• Bearing directions: Head toward 12 o'clock<br>• Hazard overlay alerts along active pedestrian route"]
-    end
-```
-
----
-
-## Figures K.5 & K.6: Onboarding Wizard & System Settings
-
-### APA 7th Metadata
-- **Figure K.5**: *Multi-Step Setup Onboarding Wizard Sequence* (Manuscript Page 196, PDF Page 204)
-- **Figure K.6**: *System Settings and Accessibility Control Panel* (Manuscript Page 196, PDF Page 204)
-- **Image Asset**: [fig_k_5_k_6_onboarding_settings.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_k_5_k_6_onboarding_settings.png)
+- **Image Asset**: [fig_k_05_onboarding.png](assets/fig_k_05_onboarding.png)
 
 ```
 Figure K.5
-Multi-Step Setup Onboarding Wizard Sequence
+Seventeen-Step Onboarding Setup
 
-Note. Figure K.5 maps the complete multi-step onboarding wizard sequence guiding visually impaired users through language selection, role attribution, visual impairment grading, voice persona selection, and emergency contact pairing.
-
-Figure K.6
-System Settings and Accessibility Control Panel
-
-Note. Figure K.6 details the system settings panel, enabling granular control over language localization (English/Filipino), contrast themes, TTS speech rate, and haptic impulse strength.
+Note. The seventeen voice-guided onboarding steps, from choosing a language to adding an emergency contact.
 ```
 
 ---
 
-### Onboarding Steps Sequence
+## Figure K.6: Settings Screen
 
-1. **Step 1: Language Selection** — English or Filipino (Tagalog) with instant voice confirmation.
-2. **Step 2: Role Attribution** — "For Myself" or "For Someone Else" (Configuring caretaker/patient mode).
-3. **Step 3: Clinical Impairment Grading** — Selection of condition (Moderate, Severe, Blindness) for UI optimization.
-4. **Step 4: Voice Persona Selection** — Aria (Calm Female), Echo (Deep Male), or Buddy (Friendly Companion).
-5. **Step 5: Emergency Contact Setup** — Register primary phone number for SOS SMS dispatch.
-6. **Step 6: Completion** — Voice walkthrough confirmation and dashboard transition.
+- **Image Asset**: [fig_k_06_settings.png](assets/fig_k_06_settings.png)
+
+```
+Figure K.6
+Settings Screen
+
+Note. The Settings screen with language, notifications, preferences, appearance and units.
+```
 
 ---
 
-## Figures K.7 & K.8: Contacts Management & Notification History
+## Figure K.7: Emergency Contact Management
 
-### APA 7th Metadata
-- **Figure K.7**: *Emergency Contact Registration and Management* (Manuscript Page 197, PDF Page 205)
-- **Figure K.8**: *In-App Notification Log and Warning Registry* (Manuscript Page 197, PDF Page 205)
-- **Image Asset**: [fig_k_7_k_8_contacts_notifications.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_k_7_k_8_contacts_notifications.png)
+- **Image Asset**: [fig_k_07_contacts.png](assets/fig_k_07_contacts.png)
 
 ```
 Figure K.7
-Emergency Contact Registration and Management
+Emergency Contact Management
 
-Note. Figure K.7 shows the emergency contact management interface with direct contact book import and custom relationship assignment.
-
-Figure K.8
-In-App Notification Log and Warning Registry
-
-Note. Figure K.8 illustrates the chronological notification registry and incident history log displaying past hazard warnings and system telemetry events.
+Note. The Contacts screen, with a saved emergency contact (phone number blurred) and options to import or add contacts.
 ```
 
 ---
 
-## Figures K.9 & K.10: Dynamic Preferences & Offline AI Chat
+## Figure K.8: In-App Notification History
 
-### APA 7th Metadata
-- **Figure K.9**: *User Preferences and Dynamic Customization Panel* (Manuscript Page 198, PDF Page 206)
-- **Figure K.10**: *Offline Local AI Chat and Conversational Companion* (Manuscript Page 198, PDF Page 206)
-- **Image Asset**: [fig_k_9_k_10_preferences_local_ai.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_k_9_k_10_preferences_local_ai.png)
+- **Image Asset**: [fig_k_08_notifications.png](assets/fig_k_08_notifications.png)
+
+```
+Figure K.8
+In-App Notification History
+
+Note. The notification list with filters for obstacle alerts, Buddy follow-ups and battery alerts.
+```
+
+---
+
+## Figure K.9: Home Screen Customization and Preferences
+
+- **Image Asset**: [fig_k_09_customize_preferences.png](assets/fig_k_09_customize_preferences.png)
 
 ```
 Figure K.9
-User Preferences and Dynamic Customization Panel
+Home Screen Customization and Preferences
 
-Note. Figure K.9 exhibits the dashboard card reordering and dynamic text scaling preference screen.
+Note. Customize Home Screen, where dashboard buttons are reordered or hidden, and Preferences, with text size, voice feedback and haptic settings.
+```
 
+---
+
+## Figure K.10: Buddy Chat in Local AI Mode
+
+- **Image Asset**: [fig_k_10_buddy_local_ai_chat.png](assets/fig_k_10_buddy_local_ai_chat.png)
+
+```
 Figure K.10
-Offline Local AI Chat and Conversational Companion
+Buddy Chat in Local AI Mode
 
-Note. Figure K.10 displays the conversational AI chat interface powered by the on-device Gemma-IT 2B model for hands-free offline assistance.
+Note. The Buddy chat in Local AI mode, answering questions in Filipino with Gemma 2B on the phone.
 ```
