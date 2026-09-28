@@ -15,7 +15,7 @@
 Figure 3.3
 Dataset Curation and Pruning Workflow from 30 Raw Labels to the 24-Class Taxonomy
 
-Note. Figure 3.3 shows how the raw Kaggle dataset (30 class folders, 38,262 images) was reduced to the 24-class taxonomy: the overlapping person and Person folders were merged, and five ghost classes too small to learn from (chair, handbag, traffic_light and umbrella with 3 images each; bench with 9) were removed. The final dataset contains 38,176 images (31,866 train / 4,185 validation / 2,125 test).
+Note. Figure 3.3 shows how the raw Kaggle dataset (30 class folders, 38,262 images) was reduced to the 24-class taxonomy: the overlapping person and Person folders were merged, and five ghost classes too small to learn from (chair, handbag, traffic_light and umbrella with 3 images each; bench with 9) were removed (21 images across all splits), leaving 38,240 images. The final dataset used for Phase 4 training and the test contains 38,176 images (31,866 train / 4,185 validation / 2,125 test); the training notebook does not record the step that removed the other 64 images.
 ```
 
 ---
@@ -25,17 +25,19 @@ Note. Figure 3.3 shows how the raw Kaggle dataset (30 class folders, 38,262 imag
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"primaryColor": "#EEF3FB", "primaryBorderColor": "#4C72B0", "primaryTextColor": "#1A1A1A", "secondaryColor": "#FFF6E5", "tertiaryColor": "#F7F7F7", "lineColor": "#444444", "fontFamily": "arial, sans-serif", "fontSize": "15px", "edgeLabelBackground": "#FFFFFF", "clusterBkg": "#F7F7F7", "clusterBorder": "#9A9A9A", "actorBkg": "#EEF3FB", "actorBorder": "#4C72B0", "actorTextColor": "#1A1A1A", "actorLineColor": "#9A9A9A", "signalColor": "#333333", "signalTextColor": "#1A1A1A", "noteBkgColor": "#F2F2F2", "noteBorderColor": "#9A9A9A", "labelBoxBkgColor": "#F2F2F2", "labelBoxBorderColor": "#9A9A9A", "loopTextColor": "#1A1A1A", "activationBkgColor": "#EEF3FB"}, "flowchart": {"wrappingWidth": 380, "nodeSpacing": 35, "rankSpacing": 45}, "fontFamily": "arial, sans-serif"}}%%
 flowchart TD
-    RAW["<b>Raw Kaggle dataset (Gobara)</b><br/>30 class folders · 38,262 images<br/>31,944 train / 4,189 validation / 2,129 test"]
+    RAW["<b>Raw Kaggle dataset (Gobara)</b><br/>COCO annotations converted to one folder per class<br/>30 classes · 38,262 images<br/>31,944 train / 4,189 validation / 2,129 test"]
 
     AUDIT["<b>1. Audit class folders</b><br/>• Duplicate labels: person and Person<br/>• Five near-empty ('ghost') classes the model could not learn"]
 
-    MERGE["<b>2. Merge overlapping folders</b><br/>person merged into Person<br/>30 → 29 classes"]
+    REDIST["<b>2. Redistribute rare-class images across splits</b><br/>Total unchanged: 38,262 images<br/>31,940 train / 4,191 validation / 2,131 test"]
 
-    PRUNE["<b>3. Prune ghost classes</b><br/>chair, handbag, traffic_light, umbrella (3 images each)<br/>bench (9 images in train and test)<br/>29 → 24 classes"]
+    MERGE["<b>3. Merge overlapping folders</b><br/>person merged into Person<br/>30 → 29 classes"]
 
-    FINAL["<b>Final 24-class dataset</b><br/>38,176 images<br/>31,866 train / 4,185 validation / 2,125 test"]
+    PRUNE["<b>4. Prune ghost classes</b><br/>bench (9 images), chair, handbag, traffic_light, umbrella (3 images each)<br/>29 → 24 classes · 38,240 images<br/>31,928 train / 4,186 validation / 2,126 test<br/>(22 fewer: the 21 ghost-class images and 1 other file)"]
 
-    RAW --> AUDIT --> MERGE --> PRUNE --> FINAL
+    FINAL["<b>Final 24-class dataset used for Phase 4 and the test</b><br/>38,176 images<br/>31,866 train / 4,185 validation / 2,125 test<br/>(64 fewer than after pruning; the notebook does not record<br/>the step that removed them)"]
+
+    RAW --> AUDIT --> REDIST --> MERGE --> PRUNE --> FINAL
 ```
 
 ---

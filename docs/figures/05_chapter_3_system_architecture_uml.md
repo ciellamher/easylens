@@ -43,7 +43,7 @@ sequenceDiagram
 
     rect rgb(244, 250, 245)
         note over Glasses, Output: Navigation mode (hazard warnings)
-        loop Every ~0.5 seconds
+        loop Each new frame (object detection at most every 0.4 s)
             Glasses->>App: Latest camera frame
             App->>Vision: Detect objects and label the image
             Vision-->>App: Bounding boxes and labels
@@ -59,15 +59,18 @@ sequenceDiagram
     rect rgb(253, 249, 240)
         note over User, Gemini: Talking to Buddy
         User->>App: Spoken question
-        App->>App: Speech-to-text and knowledge-base search (TF-IDF)
+        App->>App: Speech-to-text, then TF-IDF search of the knowledge base and recent journals
         alt Local AI mode (default)
             App->>App: Answer with Gemma 2B on the phone (offline)
         else Online mode, or some Filipino questions
-            App->>Gemini: Question with context
+            App->>Gemini: Question with context (and camera image for camera-view questions)
             Gemini-->>App: Answer
         end
         App->>Output: Speak the answer
         Output-->>User: Spoken answer
+        opt Phone online (any mode)
+            App->>Gemini: Exchange sent for a one-line journal note
+        end
     end
 
     rect rgb(252, 243, 243)

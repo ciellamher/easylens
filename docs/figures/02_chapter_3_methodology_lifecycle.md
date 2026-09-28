@@ -49,7 +49,7 @@ flowchart TD
 
     DP["<b>3. Data Preparation</b><br/>• Merged person into Person; removed 5 ghost classes (bench, chair, handbag, umbrella, traffic_light) → 24 classes<br/>• Images resized to 224 × 224<br/>• Augmentation: rotation ±20°, zoom 20%, width shift 20%, horizontal flip<br/>• Balanced class weights<br/>• Split: 31,866 train / 4,185 validation / 2,125 test (38,176 images)"]
 
-    M["<b>4. Modeling</b><br/>• MobileNetV2 backbone (ImageNet weights) + Dense 512 → Dense 256 → Softmax (24 classes)<br/>• Four training phases, unfreezing progressively more layers (Adam, learning rate 5e-4 → 1e-5 → 5e-6 → 1e-7)<br/>• Early stopping and learning-rate reduction on plateau<br/>• Trained in Google Colab (NVIDIA T4 GPU)"]
+    M["<b>4. Modeling</b><br/>• MobileNetV2 backbone (ImageNet weights) + Dense 512 → Dense 256 → Softmax (24 classes)<br/>• Four training phases: head only, top 30 layers, then all layers (twice) (Adam, learning rate 5e-4 → 1e-5 → 5e-6 → 1e-7)<br/>• Early stopping and learning-rate reduction on plateau<br/>• Trained in Google Colab (NVIDIA T4 GPU)"]
 
     EV["<b>5. Evaluation</b> (held-out test set, 2,125 images)<br/>• Top-1, Top-2 and Top-3 accuracy<br/>• Balanced accuracy<br/>• Weighted precision, recall and F1-score<br/>• Inference time (GPU, offline)"]
 
