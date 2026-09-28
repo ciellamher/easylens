@@ -17,7 +17,7 @@ To redraw the charts, run `python3 docs/figures/src/appendix_h_gantt.py`.
 Figure H.1
 Simplified Gantt Chart (Phase-Level Overview)
 
-Note. Figure H.1 summarizes the eight phases of the EasyLens project from December 2025 to September 2026, from research and hardware sourcing through the post-defense revisions. The hard copy was submitted on September 2, the final defense was held on September 23, and the soft copy and deliverables were submitted on September 28–29, 2026.
+Note. Figure H.1 summarizes the eight phases of the EasyLens project from December 2025 to September 2026, from research and hardware sourcing through the post-defense revisions. The soft copy and deliverables were submitted on August 28–29, the hard copy on September 2, and the final defense was held on September 23, 2026.
 ```
 
 ---
