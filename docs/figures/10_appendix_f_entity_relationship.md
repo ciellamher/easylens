@@ -1,4 +1,6 @@
-# Appendix F: Entity Relationship Diagrams (ERD)
+# Appendix F: Entity Relationship Diagrams
+
+Both diagrams show the data EasyLens actually stores, checked against the current code (`upstream/main`, commit `c10062e`). EasyLens has no SQL database: account data is stored in Google Cloud Firestore (a document database), and registered faces, Buddy's interaction journals, settings and a copy of the emergency contacts are stored on the phone. In Figure F.2, each Firestore subcollection is shown as a table whose foreign key is the parent user document (`users/{uid}`).
 
 ---
 
@@ -7,53 +9,49 @@
 ### APA 7th Citation & Metadata
 - **Figure Number**: Figure F.1
 - **Figure Title**: *Conceptual Entity Relationship Diagram*
-- **Manuscript Page**: 182
-- **PDF Page**: 190
-- **Image Asset**: [fig_f_1_conceptual_erd.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_f_1_conceptual_erd.png)
+- **Image Asset**: [fig_f_1_conceptual_erd.png](assets/fig_f_1_conceptual_erd.png)
 
 ```
 Figure F.1
 Conceptual Entity Relationship Diagram
 
-Note. Figure F.1 models the high-level conceptual entities and cardinalities governing the EasyLens relational data architecture.
+Note. Figure F.1 shows the main data entities in EasyLens and how they relate to the user, in Chen notation. A user can add up to three emergency contacts, and can register any number of faces, navigate to any number of destinations, and submit any number of feedback entries. Buddy's conversations are logged in daily journals; the dashed line shows that journals are kept on the phone but are not linked to a user account.
 ```
 
----
+### Source (Graphviz)
 
-### Technical Diagram (Mermaid Conceptual ERD)
+```dot
+graph F1 {
+  graph [layout=neato, overlap=false, splines=true, dpi=220, pad=0.3, bgcolor=white, fontname="Helvetica"];
+  node  [fontname="Helvetica", fontsize=12];
+  edge  [fontname="Helvetica", fontsize=11, color="#444444", len=1.6];
 
-```mermaid
-erDiagram
-    USER ||--o{ EMERGENCY_CONTACT : "registers (1:N)"
-    USER ||--o{ INCIDENT_LOG : "triggers (1:N)"
-    USER ||--o{ SAVED_PLACE : "saves (1:N)"
-    INCIDENT_LOG ||--o| STORAGE_ASSET : "attaches snapshot (1:1)"
+  node [shape=box, style="filled,bold", fillcolor="#EEF3FB", color="#4C72B0", width=1.9, height=0.6];
+  USER    [label="USER", pos="0,0!"];
+  CONTACT [label="EMERGENCY CONTACT", pos="5.2,3.0!"];
+  FACE    [label="REGISTERED FACE", pos="5.2,1.5!"];
+  DEST    [label="RECENT DESTINATION", pos="5.2,0!"];
+  FB      [label="FEEDBACK", pos="5.2,-1.5!"];
+  JOURNAL [label="JOURNAL", pos="5.2,-3.0!", style="filled,bold,dashed"];
 
-    USER {
-        string user_id PK
-        string email
-        string preferred_language
-    }
-    EMERGENCY_CONTACT {
-        string contact_id PK
-        string user_id FK
-        string phone_number
-    }
-    INCIDENT_LOG {
-        string log_id PK
-        string user_id FK
-        string hazard_label
-    }
-    SAVED_PLACE {
-        string place_id PK
-        string user_id FK
-        string label
-    }
-    STORAGE_ASSET {
-        string asset_id PK
-        string log_id FK
-        string r2_object_key
-    }
+  node [shape=diamond, style=filled, fillcolor="#FFF6E5", color="#DD8452", width=1.5, height=0.8, fontsize=11];
+  R1 [label="adds", pos="2.6,3.0!"];
+  R2 [label="registers", pos="2.6,1.5!"];
+  R3 [label="navigates to", pos="2.6,0!"];
+  R4 [label="submits", pos="2.6,-1.5!"];
+  R5 [label="talks to Buddy,\nlogged in", pos="2.6,-3.0!", width=1.9, height=1.0];
+
+  USER -- R1 [headlabel="", taillabel="1", labeldistance=2.2];
+  R1 -- CONTACT [headlabel="0..3", labeldistance=2.2];
+  USER -- R2 [taillabel="1", labeldistance=2.2];
+  R2 -- FACE [headlabel="0..N", labeldistance=2.2];
+  USER -- R3 [taillabel="1", labeldistance=2.2];
+  R3 -- DEST [headlabel="0..N", labeldistance=2.2];
+  USER -- R4 [taillabel="1", labeldistance=2.2];
+  R4 -- FB [headlabel="0..N", labeldistance=2.2];
+  USER -- R5 [taillabel="1", labeldistance=2.2, style=dashed];
+  R5 -- JOURNAL [headlabel="0..N", labeldistance=2.2, style=dashed];
+}
 ```
 
 ---
@@ -63,79 +61,32 @@ erDiagram
 ### APA 7th Citation & Metadata
 - **Figure Number**: Figure F.2
 - **Figure Title**: *Relational Entity Relationship Diagram*
-- **Manuscript Page**: 183
-- **PDF Page**: 191
-- **Image Asset**: [fig_f_2_relational_erd.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_f_2_relational_erd.png)
+- **Image Asset**: [fig_f_2_relational_erd.png](assets/fig_f_2_relational_erd.png)
 
 ```
 Figure F.2
 Relational Entity Relationship Diagram
 
-Note. Figure F.2 details the physical relational schema, field definitions, primary keys (PK), foreign keys (FK), and referential integrity constraints implemented across the local SQLite database and Cloudflare D1 serverless database.
+Note. Figure F.2 lists the fields, data types, primary keys (PK) and foreign keys (FK) of each entity, in crow's foot notation, with where each is stored. USERS, EMERGENCY_CONTACTS, RECENT_NAVIGATION and FEEDBACKS are stored in Google Cloud Firestore; emergency contacts and the last five destinations are also kept on the phone. REGISTERED_FACES and JOURNALS are stored only on the phone (shown in green). JOURNALS holds one file per day with Buddy's conversation logs and short notes about the user; it has no user ID, so every account signed in on the same phone shares it (dashed line). Submitted feedback is also copied to a Notion database.
 ```
 
----
+### Source (Graphviz)
 
-### Technical Diagram (Mermaid Relational ERD)
-
-```mermaid
-erDiagram
-    USERS ||--o{ EMERGENCY_CONTACTS : "has registered (1:N)"
-    USERS ||--o{ INCIDENT_LOGS : "records (1:N)"
-    USERS ||--o{ SAVED_PLACES : "saves (1:N)"
-    INCIDENT_LOGS ||--o| STORAGE_ASSETS : "attaches snapshot (1:1)"
-
-    USERS {
-        string user_id PK
-        string email
-        string phone_number
-        string preferred_language
-        float speech_rate
-        float voice_pitch
-        boolean haptic_feedback_enabled
-        datetime created_at
-        datetime last_login
-    }
-
-    EMERGENCY_CONTACTS {
-        string contact_id PK
-        string user_id FK
-        string contact_name
-        string phone_number
-        string relationship
-        boolean is_primary
-        datetime added_at
-    }
-
-    INCIDENT_LOGS {
-        string log_id PK
-        string user_id FK
-        string incident_type
-        float latitude
-        float longitude
-        string hazard_label
-        float confidence_score
-        boolean sos_triggered
-        datetime timestamp
-    }
-
-    SAVED_PLACES {
-        string place_id PK
-        string user_id FK
-        string label
-        string address
-        float latitude
-        float longitude
-        datetime created_at
-    }
-
-    STORAGE_ASSETS {
-        string asset_id PK
-        string log_id FK
-        string r2_object_key
-        string public_url
-        int file_size_bytes
-        string content_type
-        datetime uploaded_at
-    }
+```dot
+digraph F2 {
+  graph [rankdir=LR, dpi=200, pad=0.3, bgcolor=white, nodesep=0.4, ranksep=1.3, fontname="Helvetica"];
+  node [shape=plaintext, fontname="Helvetica", fontsize=10];
+  edge [color="#444444", dir=both, fontname="Helvetica", fontsize=10];
+  USERS [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" color="#4C72B0"><tr><td colspan="3" bgcolor="#DCE6F5"><b>USERS</b></td></tr><tr><td colspan="3" bgcolor="#DCE6F5"><font point-size="9">Firestore: users/{uid}</font></td></tr><tr><td align="left" width="34"><font color="#8A5A00"><b>PK</b></font></td><td align="left">uid</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">email</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">displayName</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">photoUrl</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">isForMyself</td><td align="left"><font color="#555555">boolean</font></td></tr><tr><td align="left" width="34"></td><td align="left">selectedConditions</td><td align="left"><font color="#555555">array&lt;string&gt;</font></td></tr><tr><td align="left" width="34"></td><td align="left">preferences.birthday</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">preferences.selectedLanguage</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">preferences.selectedContrastTheme</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">preferences.selectedVoicePersona</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">preferences.selectedUnit</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">preferences.selectedMobilityAid</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">preferences.voiceFeedback</td><td align="left"><font color="#555555">boolean</font></td></tr><tr><td align="left" width="34"></td><td align="left">preferences.hapticFeedback</td><td align="left"><font color="#555555">boolean</font></td></tr><tr><td align="left" width="34"></td><td align="left">createdAt</td><td align="left"><font color="#555555">timestamp</font></td></tr><tr><td align="left" width="34"></td><td align="left">updatedAt</td><td align="left"><font color="#555555">timestamp</font></td></tr></table>>];
+  CONTACTS [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" color="#4C72B0"><tr><td colspan="3" bgcolor="#DCE6F5"><b>EMERGENCY_CONTACTS</b></td></tr><tr><td colspan="3" bgcolor="#DCE6F5"><font point-size="9">Firestore: users/{uid}/contacts/{phone}; copy on phone</font></td></tr><tr><td align="left" width="34"><font color="#8A5A00"><b>PK</b></font></td><td align="left">phone (normalized)</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"><font color="#8A5A00"><b>FK</b></font></td><td align="left">uid</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">name</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">relationship</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">isActive</td><td align="left"><font color="#555555">boolean</font></td></tr></table>>];
+  FACES [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" color="#55A868"><tr><td colspan="3" bgcolor="#DDEFE2"><b>REGISTERED_FACES</b></td></tr><tr><td colspan="3" bgcolor="#DDEFE2"><font point-size="9">Phone only (never uploaded)</font></td></tr><tr><td align="left" width="34"><font color="#8A5A00"><b>PK</b></font></td><td align="left">id</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"><font color="#8A5A00"><b>FK</b></font></td><td align="left">userId</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">name</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">imageLocalPath</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">faceFeatures</td><td align="left"><font color="#555555">list&lt;double&gt;</font></td></tr><tr><td align="left" width="34"></td><td align="left">multiSampleFeatures</td><td align="left"><font color="#555555">list&lt;list&lt;double&gt;&gt;</font></td></tr><tr><td align="left" width="34"></td><td align="left">registeredAt</td><td align="left"><font color="#555555">datetime</font></td></tr><tr><td align="left" width="34"></td><td align="left">isGdprConsented</td><td align="left"><font color="#555555">boolean</font></td></tr><tr><td align="left" width="34"></td><td align="left">consentDate</td><td align="left"><font color="#555555">datetime</font></td></tr></table>>];
+  DEST [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" color="#4C72B0"><tr><td colspan="3" bgcolor="#DCE6F5"><b>RECENT_NAVIGATION</b></td></tr><tr><td colspan="3" bgcolor="#DCE6F5"><font point-size="9">Firestore: users/{uid}/recent_navigation/{id}; last 5 on phone</font></td></tr><tr><td align="left" width="34"><font color="#8A5A00"><b>PK</b></font></td><td align="left">id (time in ms)</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"><font color="#8A5A00"><b>FK</b></font></td><td align="left">uid</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">name</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">address</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">latitude</td><td align="left"><font color="#555555">double</font></td></tr><tr><td align="left" width="34"></td><td align="left">longitude</td><td align="left"><font color="#555555">double</font></td></tr><tr><td align="left" width="34"></td><td align="left">dist</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">time</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">steps</td><td align="left"><font color="#555555">array&lt;string&gt;</font></td></tr><tr><td align="left" width="34"></td><td align="left">timestamp</td><td align="left"><font color="#555555">timestamp</font></td></tr></table>>];
+  JOURNAL [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" color="#55A868" style="dashed"><tr><td colspan="3" bgcolor="#DDEFE2"><b>JOURNALS</b></td></tr><tr><td colspan="3" bgcolor="#DDEFE2"><font point-size="9">Phone only: journals/journal_YYYY-MM-DD.md (one file per day, no user ID)</font></td></tr><tr><td align="left" width="34"><font color="#8A5A00"><b>PK</b></font></td><td align="left">date</td><td align="left"><font color="#555555">date (YYYY-MM-DD)</font></td></tr><tr><td align="left" width="34"></td><td align="left">filePath</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">insights</td><td align="left"><font color="#555555">list&lt;string&gt;</font></td></tr><tr><td align="left" width="34"></td><td align="left">logs[].time</td><td align="left"><font color="#555555">string (HH:MM)</font></td></tr><tr><td align="left" width="34"></td><td align="left">logs[].userMessage</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">logs[].buddyResponse</td><td align="left"><font color="#555555">string</font></td></tr></table>>];
+  FB [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" color="#4C72B0"><tr><td colspan="3" bgcolor="#DCE6F5"><b>FEEDBACKS</b></td></tr><tr><td colspan="3" bgcolor="#DCE6F5"><font point-size="9">Firestore: users/{uid}/feedbacks/{autoId}; copy sent to Notion</font></td></tr><tr><td align="left" width="34"><font color="#8A5A00"><b>PK</b></font></td><td align="left">autoId</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"><font color="#8A5A00"><b>FK</b></font></td><td align="left">userId</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">email</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">displayName</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">rating</td><td align="left"><font color="#555555">int (1–5)</font></td></tr><tr><td align="left" width="34"></td><td align="left">subject</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">comment</td><td align="left"><font color="#555555">string</font></td></tr><tr><td align="left" width="34"></td><td align="left">timestamp</td><td align="left"><font color="#555555">timestamp</font></td></tr></table>>];
+  USERS -> CONTACTS [arrowtail=teetee, arrowhead=crowodot, label="has (0..3)"];
+  USERS -> FACES [arrowtail=teetee, arrowhead=crowodot, label="registers"];
+  USERS -> DEST [arrowtail=teetee, arrowhead=crowodot, label="navigates to"];
+  USERS -> FB [arrowtail=teetee, arrowhead=crowodot, label="submits"];
+  USERS -> JOURNAL [arrowtail=none, arrowhead=crowodot, style=dashed, label="same phone\n(not linked by ID)"];
+}
 ```

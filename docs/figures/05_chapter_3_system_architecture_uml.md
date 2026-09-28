@@ -9,13 +9,13 @@
 - **Figure Title**: *EasyLens System Architecture and Detailed UML Sequence Diagram*
 - **Manuscript Page**: 102
 - **PDF Page**: 109
-- **Image Asset**: [fig_3_11_system_architecture_sequence.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_11_system_architecture_sequence.png)
+- **Image Asset**: [fig_system_sequence_diagram.png](assets/fig_system_sequence_diagram.png)
 
 ```
 Figure 3.11
 EasyLens System Architecture and Detailed UML Sequence Diagram
 
-Note. Figure 3.11 exhibits the overall EasyLens system architecture and unified modeling language (UML) sequence diagram, outlining the asynchronous data transmission, thread separation protocols via Dart Isolates, and dual Large Language Model reasoning paths.
+Note. Figure 3.11 shows the EasyLens system architecture as a unified modeling language (UML) sequence diagram: connecting the smart glasses over their local Wi-Fi network, the Navigation-mode hazard-warning loop using Google ML Kit on the phone, Buddy's question-and-answer flow (Gemma 2B on the phone in Local AI mode, the default, or Google Gemini in online mode and for some Filipino questions), and the Emergency SOS flow.
 ```
 
 ---
@@ -23,77 +23,64 @@ Note. Figure 3.11 exhibits the overall EasyLens system architecture and unified 
 ### Technical Diagram (Mermaid Sequence Diagram)
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#EEF3FB", "primaryBorderColor": "#4C72B0", "primaryTextColor": "#1A1A1A", "secondaryColor": "#FFF6E5", "tertiaryColor": "#F7F7F7", "lineColor": "#444444", "fontFamily": "arial, sans-serif", "fontSize": "15px", "edgeLabelBackground": "#FFFFFF", "clusterBkg": "#F7F7F7", "clusterBorder": "#9A9A9A", "actorBkg": "#EEF3FB", "actorBorder": "#4C72B0", "actorTextColor": "#1A1A1A", "actorLineColor": "#9A9A9A", "signalColor": "#333333", "signalTextColor": "#1A1A1A", "noteBkgColor": "#F2F2F2", "noteBorderColor": "#9A9A9A", "labelBoxBkgColor": "#F2F2F2", "labelBoxBorderColor": "#9A9A9A", "loopTextColor": "#1A1A1A", "activationBkgColor": "#EEF3FB"}, "sequence": {"messageFontFamily": "arial, sans-serif", "actorFontFamily": "arial, sans-serif", "noteFontFamily": "arial, sans-serif", "mirrorActors": false, "messageFontSize": 15, "actorFontSize": 15, "noteFontSize": 15, "boxMargin": 8}, "fontFamily": "arial, sans-serif"}}%%
 sequenceDiagram
-    autonumber
-    actor User as Visually Impaired User
+    actor User as User
     participant Glasses as Smart Glasses (ESP32-CAM)
-    participant App as EasyLens App (Flutter Core)
-    participant Isolate as Dart Background Isolate
-    participant EdgeAI as Edge-AI Engine (TFLite / ML Kit)
-    participant LLM as Conversational AI (Gemma 2B / Gemini)
-    participant AudioHaptic as Spatial Audio & Haptics
-    participant Cloud as Cloud Tier (Cloudflare / Firebase)
+    participant App as Buddy App (smartphone)
+    participant Vision as Google ML Kit (on phone)
+    participant Output as Voice & Vibration
+    participant Gemini as Google Gemini (cloud)
+    participant Contacts as Emergency Contacts
 
-    %% System Initialization
-    rect rgb(240, 245, 255)
-        note over User, Glasses: System Startup & Handshake
-        Glasses->>Glasses: Broadcast Standalone Wi-Fi AP ("EasyLens-Camera")
-        User->>App: Launch EasyLens Application
-        App->>Glasses: Establish Persistent HTTP Connection (192.168.4.1:81/stream)
-        Glasses-->>App: Acknowledge Connection & Begin MJPEG Byte Stream
+    rect rgb(243, 247, 253)
+        note over User, App: Connecting to the glasses
+        Glasses->>Glasses: Start "EasyLens-Camera" Wi-Fi network
+        User->>App: Join the Wi-Fi in phone settings, then tap Connect
+        App->>Glasses: Request video stream (192.168.4.1:81/stream)
+        Glasses-->>App: Send continuous JPEG frames
     end
 
-    %% Real-Time Continuous Perception Loop
-    rect rgb(245, 255, 245)
-        note over App, AudioHaptic: Continuous Edge Perception Loop (15–30 FPS)
-        loop Every Video Frame
-            Glasses->>App: Deliver MJPEG Frame Bytes
-            App->>Isolate: Transfer Raw Frame Buffer (Zero Main-Thread Jitter)
-            Isolate->>Isolate: Resize to 300x300 Matrix & Normalize
-            Isolate->>EdgeAI: Pass Normalized Tensor to TFLite
-            EdgeAI->>EdgeAI: Execute MobileNetV2 SSD Inference (24 Classes)
-            EdgeAI-->>Isolate: Return Bounding Boxes & Confidence Scores
-            
-            alt Hazard Detected (Confidence > 0.65)
-                Isolate->>App: Post Hazard Event (e.g., "Vehicle Approaching - Left")
-                App->>AudioHaptic: Trigger Priority Audio Override & Haptic Pattern
-                AudioHaptic->>User: Emit Spatial Directional Voice Alert + Haptic Vibration
-                App-.->Cloud: Asynchronously Log Incident Telemetry (Cloudflare D1)
-            else Path Clear
-                Isolate-->>App: Return Path Clear State
+    rect rgb(244, 250, 245)
+        note over Glasses, Output: Navigation mode (hazard warnings)
+        loop Each new frame (object detection at most every 0.4 s)
+            Glasses->>App: Latest camera frame
+            App->>Vision: Detect objects and label the image
+            Vision-->>App: Bounding boxes and labels
+            alt Obstacle centered and close, or hazard recognized
+                App->>Output: Warning (e.g., "Stop immediately", "Obstacle ahead, step to your left")
+                Output-->>User: Spoken warning + vibration
+            else Path clear
+                App->>App: Keep scanning
             end
         end
     end
 
-    %% Multimodal Conversational AI Flow
-    rect rgb(255, 250, 240)
-        note over User, LLM: Multimodal Natural Voice Query Flow
-        User->>App: Spoken Voice Query (e.g., "What is in front of me?")
-        App->>App: Speech-to-Text Conversion
-        
-        alt Query in English (Offline Mode)
-            App->>LLM: Pass Query + Knowledge Base to On-Device Gemma-IT 2B (INT4)
-            LLM-->>App: Return Structured Local Response String
-        else Query in Filipino / Complex Scene (Online Fallback)
-            App->>Cloud: Forward Request to Cloud Gemini 3.6 Flash Low
-            Cloud-->>App: Return Natural Filipino Context String
+    rect rgb(253, 249, 240)
+        note over User, Gemini: Talking to Buddy
+        User->>App: Spoken question
+        App->>App: Speech-to-text, then TF-IDF search of the knowledge base and recent journals
+        alt Local AI mode (default)
+            App->>App: Answer with Gemma 2B on the phone (offline)
+        else Online mode, or some Filipino questions
+            App->>Gemini: Question with context (and camera image for camera-view questions)
+            Gemini-->>App: Answer
         end
-
-        App->>AudioHaptic: Synthesize Voice Output
-        AudioHaptic->>User: Spoken Natural Response
+        App->>Output: Speak the answer
+        Output-->>User: Spoken answer
+        opt Phone online (any mode)
+            App->>Gemini: Exchange sent for a one-line journal note
+        end
     end
 
-    %% Emergency SOS Dispatch Flow
-    rect rgb(255, 240, 240)
-        note over User, Cloud: Emergency SOS Trigger Flow
-        User->>App: Long-Press SOS / Trigger Word / Critical Impact Fall
-        App->>AudioHaptic: Emit Audible 5-Second Countdown Beeps
-        AudioHaptic->>User: "Emergency SOS alerting in 5 seconds. Tap to cancel."
-        
-        opt Not Cancelled
-            App->>Cloud: Post Emergency SMS Payload via Telephony Gateway
-            App->>Cloud: Upload Incident Snapshot Image to Cloudflare R2
-            Cloud-->>User: Broadcast GPS Coordinates to Registered Contacts
+    rect rgb(252, 243, 243)
+        note over User, Contacts: Emergency SOS
+        User->>App: Press SOS
+        App-->>User: 5-second countdown (tap Cancel to stop)
+        opt Not cancelled
+            App->>App: Get GPS location
+            App->>Contacts: SMS with Google Maps location link
+            App-->>User: "SOS alert sent"
         end
     end
 ```

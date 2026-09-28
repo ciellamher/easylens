@@ -43,46 +43,25 @@ flowchart LR
     OUTPUT -.->|"Voice Feedback"| INPUT
 ```
 
-#### 2.2 Subsystem Architecture IPO Flowchart
+#### 2.2 Conceptual Framework: Input, Process, Output and Evaluation
+
+**Figure 2.1.** Conceptual Framework of EasyLens
 
 ```mermaid
+%%{init: {"flowchart": {"wrappingWidth": 300}}}%%
 flowchart LR
-    subgraph INPUT ["INPUT — Sensory & Electrical Ingestion"]
-        direction TB
-        CAM["Smart Glasses Camera<br/>Egocentric live video feed"]
-        VOICE["Voice Command Input<br/>Hands-free spoken user commands"]
-        PWR["External Power Bank<br/>1,500 mAh sustained field operation"]
-        WIFI_TAG{{"Standalone Wi-Fi Hotspot — raw image buffers"}}
-    end
+    INPUT[/"<b>INPUT</b><br/><br/>• Live video from the smart glasses (ESP32-CAM) or phone camera<br/>• GPS location<br/>• Voice commands<br/>• User settings, emergency contacts and registered faces (with consent)"/]
 
-    subgraph PROCESS ["PROCESS — On-Device Edge Computation (Offline)"]
-        direction TB
-        PHONE["Host Smartphone Processing Core"]
-        SSD["MobileNetV2 SSD Detector<br/>80 COCO Classes (24-class focus)"]
-        MLKIT["Google ML Kit Vision Suite<br/>Image Labeling & Offline OCR"]
-        ISOLATE_TAG{{"Parallel Dart Isolate background threads"}}
-        
-        PHONE --> SSD
-        SSD --> MLKIT
-    end
+    PROCESS["<b>PROCESS</b> (on the smartphone)<br/><br/>• Object and hazard detection: COCO-pretrained SSD&nbsp;MobileNet and Google&nbsp;ML&nbsp;Kit<br/>• Left / Center / Right hazard steering<br/>• Text reading (OCR) and face recognition<br/>• Buddy assistant: Gemma 2B with TF‑IDF search (Local AI mode, default) or Gemini (online mode)<br/>• GPS navigation (online routing)"]
 
-    subgraph OUTPUT ["OUTPUT — Guidance, Persistence & Sync"]
-        direction TB
-        WARN["Bilingual Spatial Warnings<br/>Spoken guidance in English & Tagalog"]
-        CACHE[("Local Preference Cache<br/>On-device private settings store")]
-        CLOUD["Cloudflare Edge Database<br/>Serverless sync when internet available"]
-        COMPANION_TAG{{"Private, zero-latency navigation companion"}}
-        
-        CACHE -->|"on connect"| CLOUD
-    end
+    OUTPUT[/"<b>OUTPUT</b><br/><br/>• Spoken warnings and guidance (English&nbsp;/&nbsp;Filipino)<br/>• Vibration alerts<br/>• On-screen HUD with bounding boxes<br/>• SOS text message to emergency contacts"/]
 
-    CAM --> PHONE
-    VOICE --> PHONE
-    PWR --> ISOLATE_TAG
-    SSD --> WARN
-    MLKIT --> WARN
-    SSD --> CACHE
+    EVAL{{"<b>EVALUATION</b><br/><br/>• AI performance: custom 24-class MobileNetV2 classifier, Top-1/2/3 accuracy (offline evaluation)<br/>• Usability outcome: end-user testing (n&nbsp;=&nbsp;15)<br/>• System quality: expert evaluation (n&nbsp;=&nbsp;5)"}}
+
+    INPUT --> PROCESS --> OUTPUT --> EVAL
 ```
+
+*Note.* Each stage is drawn as one shape. Parallelograms (**Input**, **Output**) represent data entering and leaving the system, following standard flowchart convention. The rectangle (**Process**) represents the operations performed on the smartphone. The hexagon (**Evaluation**) represents the variables used to assess the study, not a step the application performs. Arrows show the direction of flow from one stage to the next. AI performance refers to the offline evaluation of the custom classifier, which is not deployed in the application; live detection in Buddy uses the COCO-pretrained SSD MobileNet model and Google ML Kit.
 
 ---
 
