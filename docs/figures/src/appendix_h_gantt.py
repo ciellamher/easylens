@@ -16,7 +16,7 @@ PHASES = [
  ("3. AI Model Training (offline)",    "2026-03-15", "2026-05-15"),
  ("4. Mobile App Development",         "2026-05-01", "2026-07-15"),
  ("5. Cloud Services and Deployment",  "2026-06-20", "2026-08-23"),
- ("6. User Testing and Evaluation",    "2026-07-01", "2026-08-18"),
+ ("6. User Testing and Evaluation",    "2026-07-20", "2026-08-18"),
  ("7. Documentation and Defense",      "2026-08-01", "2026-09-23"),
  ("8. Post-Defense Revisions",         "2026-09-24", "2026-09-30"),
 ]
@@ -42,7 +42,7 @@ TASKS = [
  (4, "Firebase Authentication and Firestore",            "2026-06-25", "2026-07-25"),
  (4, "CI/CD pipeline and Docker landing page",           "2026-07-16", "2026-07-25"),
  (4, "App releases v21–v25 (APK/IPA)",                   "2026-08-04", "2026-08-23"),
- (5, "Participant onboarding and informed consent",      "2026-07-01", "2026-07-10"),
+ (5, "Participant onboarding and informed consent",      "2026-07-20", "2026-08-04"),
  (5, "Walking trials with end-users (N = 15)",           "2026-07-20", "2026-08-04"),
  (5, "Wearability check",                                "2026-07-20", "2026-08-04"),
  (5, "ISO/IEC 25010 expert evaluation (N = 5)",          "2026-07-20", "2026-08-08"),
