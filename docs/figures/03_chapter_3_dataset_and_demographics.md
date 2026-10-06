@@ -2,20 +2,20 @@
 
 ---
 
-## Figure 3.3: Dataset Curation and Pruning Workflow from 26-Class to 24-Class Taxonomy
+## Figure 3.3: Dataset Curation and Pruning Workflow from 30 Raw Labels to the 24-Class Taxonomy
 
 ### APA 7th Citation & Metadata
 - **Figure Number**: Figure 3.3
-- **Figure Title**: *Dataset Curation and Pruning Workflow from 26-Class to 24-Class Taxonomy*
+- **Figure Title**: *Dataset Curation and Pruning Workflow from 30 Raw Labels to the 24-Class Taxonomy*
 - **Manuscript Page**: 51
 - **PDF Page**: 58
-- **Image Asset**: [fig_3_3_dataset_curation_workflow.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_3_dataset_curation_workflow.png)
+- **Image Asset**: [fig_dataset_curation_workflow.png](assets/fig_dataset_curation_workflow.png)
 
 ```
 Figure 3.3
-Dataset Curation and Pruning Workflow from 26-Class to 24-Class Taxonomy
+Dataset Curation and Pruning Workflow from 30 Raw Labels to the 24-Class Taxonomy
 
-Note. Figure 3.3 illustrates the step-by-step data-centric preprocessing and restructuring pipeline used to clean, prune, and consolidate the international raw dataset of 38,922 images into an optimized 24-class pedestrian hazard dataset comprising 38,176 images.
+Note. Figure 3.3 shows how the raw Kaggle dataset (30 class folders, 38,262 images) was reduced to the 24-class taxonomy: the overlapping person and Person folders were merged, and five ghost classes too small to learn from (chair, handbag, traffic_light and umbrella with 3 images each; bench with 9) were removed (21 images across all splits), leaving 38,240 images. The final dataset used for Phase 4 training and the test contains 38,176 images (31,866 train / 4,185 validation / 2,125 test); the training notebook does not record the step that removed the other 64 images.
 ```
 
 ---
@@ -23,36 +23,21 @@ Note. Figure 3.3 illustrates the step-by-step data-centric preprocessing and res
 ### Technical Diagram (Mermaid)
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#EEF3FB", "primaryBorderColor": "#4C72B0", "primaryTextColor": "#1A1A1A", "secondaryColor": "#FFF6E5", "tertiaryColor": "#F7F7F7", "lineColor": "#444444", "fontFamily": "arial, sans-serif", "fontSize": "15px", "edgeLabelBackground": "#FFFFFF", "clusterBkg": "#F7F7F7", "clusterBorder": "#9A9A9A", "actorBkg": "#EEF3FB", "actorBorder": "#4C72B0", "actorTextColor": "#1A1A1A", "actorLineColor": "#9A9A9A", "signalColor": "#333333", "signalTextColor": "#1A1A1A", "noteBkgColor": "#F2F2F2", "noteBorderColor": "#9A9A9A", "labelBoxBkgColor": "#F2F2F2", "labelBoxBorderColor": "#9A9A9A", "loopTextColor": "#1A1A1A", "activationBkgColor": "#EEF3FB"}, "flowchart": {"wrappingWidth": 380, "nodeSpacing": 35, "rankSpacing": 45}, "fontFamily": "arial, sans-serif"}}%%
 flowchart TD
-    RAW["Raw Secondary Dataset\n• 38,922 COCO-Annotated Images\n• 29 Unique Raw Classes (Gobara, 2024)"]
+    RAW["<b>Raw Kaggle dataset (Gobara)</b><br/>COCO annotations converted to one folder per class<br/>30 classes · 38,262 images<br/>31,944 train / 4,189 validation / 2,129 test"]
 
-    subgraph PREPROCESSING ["Data Cleaning & Consolidation Pipeline"]
-        direction TB
+    AUDIT["<b>1. Audit class folders</b><br/>• Duplicate labels: person and Person<br/>• Five near-empty ('ghost') classes the model could not learn"]
 
-        STEP1["1. Label Deduplication & Normalization\n• Consolidate uppercase 'Person' into canonical 'person'\n• Resolve duplicate label IDs"]
-        
-        STEP2["2. Localized Philippine Hazard Mapping\n• Group regional urban vehicles (Tricycles, Jeepneys, Multicabs)\n• Map into unified 'vehicle_other' class"]
+    REDIST["<b>2. Redistribute rare-class images across splits</b><br/>Total unchanged: 38,262 images<br/>31,940 train / 4,191 validation / 2,131 test"]
 
-        STEP3["3. Extreme Minority Ghost Class Pruning\n• Identify classes with <= 3 training instances\n• Prune: 'bench', 'chair', 'handbag', 'umbrella', 'traffic_light'\n• Remove 746 noise/outlier images"]
+    MERGE["<b>3. Merge overlapping folders</b><br/>person merged into Person<br/>30 → 29 classes"]
 
-        STEP4["4. Spatial Data Augmentation\n• Random horizontal flipping (p=0.5)\n• Brightness & contrast jitter (±15% for outdoor/indoor shifts)\n• Multi-scale bounding box jitter"]
-    end
+    PRUNE["<b>4. Prune ghost classes</b><br/>bench (9 images), chair, handbag, traffic_light, umbrella (3 images each)<br/>29 → 24 classes · 38,240 images<br/>31,928 train / 4,186 validation / 2,126 test<br/>(22 fewer: the 21 ghost-class images and 1 other file)"]
 
-    FINAL["Final Curated EasyLens Dataset\n• 38,176 Clean Images\n• 24 Standardized Pedestrian Classes"]
+    FINAL["<b>Final 24-class dataset used for Phase 4 and the test</b><br/>38,176 images<br/>31,866 train / 4,185 validation / 2,125 test<br/>(64 fewer than after pruning; the notebook does not record<br/>the step that removed them)"]
 
-    subgraph PARTITION ["Data Partitioning (80 / 10 / 10 Split)"]
-        direction LR
-        TRAIN["Training Set\n30,540 images (80%)"]
-        VAL["Validation Set\n3,818 images (10%)"]
-        TEST["Test Set\n3,818 images (10%)\n(2,125 isolated test subset)"]
-    end
-
-    RAW --> STEP1
-    STEP1 --> STEP2
-    STEP2 --> STEP3
-    STEP3 --> STEP4
-    STEP4 --> FINAL
-    FINAL --> PARTITION
+    RAW --> AUDIT --> REDIST --> MERGE --> PRUNE --> FINAL
 ```
 
 ---
@@ -64,7 +49,7 @@ flowchart TD
 - **Figure Title**: *Age and Gender Demographic Distribution of the Visually Impaired End-User Cohort (N = 15)*
 - **Manuscript Page**: 58
 - **PDF Page**: 65
-- **Image Asset**: [fig_3_4_demographics_age_gender.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_4_demographics_age_gender.png)
+- **Image Asset**: [fig_3_4_demographics_age_gender.png](assets/fig_3_4_demographics_age_gender.png)
 
 ```
 Figure 3.4
@@ -122,7 +107,7 @@ pie title Cohort Age Distribution (N = 15)
 - **Figure Title**: *Primary Mobility Aid and World Health Organization Low-Vision Grade Distribution (N = 15)*
 - **Manuscript Page**: 59
 - **PDF Page**: 66
-- **Image Asset**: [fig_3_5_mobility_aid_who_grades.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_5_mobility_aid_who_grades.png)
+- **Image Asset**: [fig_3_5_mobility_aid_who_grades.png](assets/fig_3_5_mobility_aid_who_grades.png)
 
 ```
 Figure 3.5
@@ -160,7 +145,7 @@ pie title WHO Visual Impairment Grade Distribution (N = 15)
 - **Figure Title**: *Professional Years of IT Experience and Domain Focus Areas of the Expert Panel (N = 5)*
 - **Manuscript Page**: 62
 - **PDF Page**: 69
-- **Image Asset**: [fig_3_6_expert_panel_experience.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_6_expert_panel_experience.png)
+- **Image Asset**: [fig_3_6_expert_panel_experience.png](assets/fig_3_6_expert_panel_experience.png)
 
 ```
 Figure 3.6
@@ -199,23 +184,24 @@ pie title Expert Primary Technical Domains (N = 5)
 - **Figure Title**: *Vision Dataset Foundations Comparison (Google OpenImages vs. Custom EasyLens Dataset)*
 - **Manuscript Page**: 85
 - **PDF Page**: 92
-- **Image Asset**: [fig_3_8_dataset_foundations_comparison.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_8_dataset_foundations_comparison.png)
+- **Image Asset**: [fig_dataset_foundations_comparison.png](assets/fig_dataset_foundations_comparison.png)
 
 ```
 Figure 3.8
 Vision Dataset Foundations Comparison (Google OpenImages vs. Custom EasyLens Dataset)
 
-Note. Figure 3.8 illustrates the structural comparison between the massive, generalized Google OpenImages dataset and the customized, highly domain-specific EasyLens pedestrian obstacle dataset.
+Note. Figure 3.8 compares Google Open Images, a general-purpose dataset of about 9 million images, with the custom 24-class EasyLens dataset of 38,176 images used to train and evaluate the custom MobileNetV2 classifier. Open Images is not used directly by EasyLens; live detection in Buddy uses a COCO-pretrained SSD MobileNet model and Google ML Kit.
 ```
 
 ---
 
 ### Comparative Evaluation Matrix
 
-| Architectural Dimension | Generic Web Dataset (Google OpenImages) | Custom EasyLens Pedestrian Dataset | Impact on Edge Performance |
-| :--- | :--- | :--- | :--- |
-| **Total Volume** | > 9,000,000 images | 38,176 curated images | Optimized for rapid transfer learning convergence on mobile hardware |
-| **Class Taxonomy** | > 600 generic classes | 24 critical pedestrian hazard classes | Eliminates classification ambiguity for immediate safety hazards |
-| **Domain Specificity** | Unfiltered general web scenes | Pedestrian ground-level viewpoints & sidewalk obstacles | Higher recall for low-lying tripping hazards (cracks, potholes, steps) |
-| **Regional Adaptation** | Global generic taxonomy | Unified `vehicle_other` covering Jeepneys & Tricycles | Prevents missed detections in dense Philippine urban traffic environments |
-| **Edge Deployment Footprint** | Large multi-gigabyte models required | Quantized 14.8 MB MobileNetV2 SSD binary | Sub-20 ms inference on commodity Android smartphones |
+| Dimension | Google Open Images (V7) | Custom EasyLens Dataset |
+| :--- | :--- | :--- |
+| **Source** | Google; general images from Flickr | Kaggle obstacle dataset (Gobara), cleaned by the researchers |
+| **Size** | About 9 million images | 38,176 images (31,866 train / 4,185 validation / 2,125 test) |
+| **Classes** | 600 object classes with bounding boxes; about 20,000 image-level labels | 24 classes (after merging person/Person and removing 5 ghost classes from 30) |
+| **Label type** | Bounding boxes and image-level labels | One label per image (image classification) |
+| **Content focus** | General everyday scenes and objects | Pedestrian hazards: vehicles, traffic lights and signs, crosswalks, potholes, stairs, traffic cones, trees and branches, doors, elevators |
+| **Role in EasyLens** | Not used directly. Live detection in Buddy uses a COCO-pretrained SSD MobileNet model and Google ML Kit | Used to train and evaluate the custom MobileNetV2 classifier (offline); not yet integrated into Buddy |

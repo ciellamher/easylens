@@ -2,20 +2,20 @@
 
 ---
 
-## Figure 4.1: The Multi-Phase Transfer Learning and Unfreezing Workflow for the MobileNetV2 SSD Network Architecture
+## Figure 4.1: The Multi-Phase Transfer Learning and Unfreezing Workflow for the MobileNetV2 Classifier
 
 ### APA 7th Citation & Metadata
 - **Figure Number**: Figure 4.1
-- **Figure Title**: *The Multi-Phase Transfer Learning and Unfreezing Workflow for the MobileNetV2 SSD Network Architecture*
+- **Figure Title**: *The Multi-Phase Transfer Learning and Unfreezing Workflow for the MobileNetV2 Classifier*
 - **Manuscript Page**: 122
 - **PDF Page**: 130
-- **Image Asset**: [fig_4_1_transfer_learning_workflow.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_4_1_transfer_learning_workflow.png)
+- **Image Asset**: [fig_transfer_learning_workflow.png](assets/fig_transfer_learning_workflow.png)
 
 ```
 Figure 4.1
-The Multi-Phase Transfer Learning and Unfreezing Workflow for the MobileNetV2 SSD Network Architecture
+The Multi-Phase Transfer Learning and Unfreezing Workflow for the MobileNetV2 Classifier
 
-Note. Figure 4.1 illustrates the systematic four-phase transfer learning and layer-unfreezing workflow implemented in Google Colab to train the MobileNetV2 SSD network, showing the progressive transition from a frozen feature extractor to fully unfrozen convolutional base weights.
+Note. Figure 4.1 shows the four-phase transfer learning workflow used in Google Colab to train the custom 24-class MobileNetV2 image classifier, from training a new classifier head on a frozen ImageNet backbone to fine-tuning all layers at very low learning rates, followed by evaluation on the held-out test set. The final model was saved in Keras format; it was not converted to TFLite or integrated into Buddy.
 ```
 
 ---
@@ -23,47 +23,23 @@ Note. Figure 4.1 illustrates the systematic four-phase transfer learning and lay
 ### Technical Diagram (Mermaid Flowchart)
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#EEF3FB", "primaryBorderColor": "#4C72B0", "primaryTextColor": "#1A1A1A", "secondaryColor": "#FFF6E5", "tertiaryColor": "#F7F7F7", "lineColor": "#444444", "fontFamily": "arial, sans-serif", "fontSize": "15px", "edgeLabelBackground": "#FFFFFF", "clusterBkg": "#F7F7F7", "clusterBorder": "#9A9A9A", "actorBkg": "#EEF3FB", "actorBorder": "#4C72B0", "actorTextColor": "#1A1A1A", "actorLineColor": "#9A9A9A", "signalColor": "#333333", "signalTextColor": "#1A1A1A", "noteBkgColor": "#F2F2F2", "noteBorderColor": "#9A9A9A", "labelBoxBkgColor": "#F2F2F2", "labelBoxBorderColor": "#9A9A9A", "loopTextColor": "#1A1A1A", "activationBkgColor": "#EEF3FB"}, "flowchart": {"wrappingWidth": 420, "nodeSpacing": 30, "rankSpacing": 40}, "fontFamily": "arial, sans-serif"}}%%
 flowchart TD
-    PRETRAINED["Pre-Trained Base Weights\n(ImageNet Pre-Trained MobileNetV2 SSD Backbone)"]
+    BASE["<b>Starting model</b><br/>MobileNetV2 backbone with ImageNet weights (224 × 224 input)<br/>+ new classifier head: Dense 512 → Dropout 0.5 → Dense 256 → Dropout 0.3 → Softmax (24 classes)<br/>Balanced class weights in every phase"]
 
-    subgraph PHASE1 ["Phase 1: Warm-Up Head Training (Epochs 1–10)"]
-        direction TB
-        P1_ACT["Freeze entire convolutional base (Layers 1–154)\nTrain newly initialized SSD detection heads & 24-class classifiers"]
-        P1_LR["Learning Rate: 1e-3 | Optimizer: Adam | Batch Size: 32"]
-    end
+    P1["<b>Phase 1: Train the new head</b><br/>Backbone fully frozen<br/>Adam, learning rate 5e-4 · ran 15 epochs (maximum 15)"]
 
-    subgraph PHASE2 ["Phase 2: Partial Unfreezing (Epochs 11–25)"]
-        direction TB
-        P2_ACT["Unfreeze Top 30 Bottleneck Residual Blocks (Layers 125–154)\nAdapt higher-level feature representations to pedestrian hazards"]
-        P2_LR["Learning Rate: 1e-4 with Step Decay"]
-    end
+    P2["<b>Phase 2: Unfreeze the top 30 backbone layers</b><br/>Adam, learning rate 1e-5 · stopped early after 8 epochs (maximum 50)"]
 
-    subgraph PHASE3 ["Phase 3: Deep Base Unfreezing (Epochs 26–40)"]
-        direction TB
-        P3_ACT["Unfreeze Intermediate Convolutional Layers (Layers 60–124)\nAlign low-level edge and texture filters with sidewalk terrain"]
-        P3_LR["Learning Rate: 5e-5 with Cosine Annealing"]
-    end
+    P3["<b>Phase 3: Unfreeze all layers</b><br/>Adam, learning rate 5e-6 · maximum 150 epochs (epoch count not recorded)"]
 
-    subgraph PHASE4 ["Phase 4: Full Network Micro Fine-Tuning (Epochs 41–50)"]
-        direction TB
-        P4_ACT["Unfreeze All 154 Layers\nFine-tune all weights across full 38,176 image dataset"]
-        P4_LR["Learning Rate: 1e-5 (Micro-Learning Rate)"]
-    end
+    P4["<b>Phase 4: Continue from the Phase 3 model</b><br/>All layers, Adam, learning rate 1e-7 · stopped early after 21 epochs (maximum 200)"]
 
-    subgraph POST_TRAIN ["Post-Training Quantization & Export"]
-        direction TB
-        EVAL["Model Validation on 2,125 Test Images\n• Top-1 Accuracy: 88.75%\n• mAP@0.5: 85.12%\n• Precision: 87.42% | Recall: 86.91%"]
-        QUANT["TensorFlow Lite INT8 Post-Training Quantization\nFootprint reduced from ~68 MB to 14.8 MB"]
-        EXPORT["Deploy to Flutter Assets (mobilenetv2_24class.tflite)"]
-    end
+    EVAL["<b>Final evaluation</b> (held-out test set, 2,125 images)<br/>Top-1/2/3 accuracy, balanced accuracy, weighted precision, recall and F1-score"]
 
-    PRETRAINED --> PHASE1
-    PHASE1 --> PHASE2
-    PHASE2 --> PHASE3
-    PHASE3 --> PHASE4
-    PHASE4 --> EVAL
-    EVAL --> QUANT
-    QUANT --> EXPORT
+    SAVE["<b>Output</b><br/>Saved in Keras format (.keras)<br/>Not converted to TFLite or integrated into Buddy"]
+
+    BASE --> P1 --> P2 --> P3 --> P4 --> EVAL --> SAVE
 ```
 
 ---

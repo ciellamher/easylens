@@ -39,13 +39,13 @@ Note. Figure 3.7 illustrates the side-by-side interface layout comparing the def
 - **Figure Title**: *The Customized Rapid Application Development (RAD) Prototyping and Evaluation Lifecycle*
 - **Manuscript Page**: 98
 - **PDF Page**: 105
-- **Image Asset**: [fig_3_9_rad_prototyping_lifecycle.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_9_rad_prototyping_lifecycle.png)
+- **Image Asset**: [fig_rad_lifecycle.png](assets/fig_rad_lifecycle.png)
 
 ```
 Figure 3.9
 The Customized Rapid Application Development (RAD) Prototyping and Evaluation Lifecycle
 
-Note. Figure 3.9 illustrates the customized Rapid Application Development (RAD) lifecycle model incorporating rapid CAD enclosure modeling, continuous machine learning integration, and iterative usability testing with visually impaired participants.
+Note. Figure 3.9 shows the customized Rapid Application Development (RAD) lifecycle: requirements planning, user design, construction and cutover/evaluation, with iterative prototyping between design and construction and refinements fed back from evaluation.
 ```
 
 ---
@@ -53,23 +53,20 @@ Note. Figure 3.9 illustrates the customized Rapid Application Development (RAD) 
 ### Technical Diagram (Mermaid)
 
 ```mermaid
-flowchart LR
-    subgraph RAD_LIFECYCLE ["EASYLENS CUSTOMIZED RAD LIFECYCLE"]
-        direction TB
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#EEF3FB", "primaryBorderColor": "#4C72B0", "primaryTextColor": "#1A1A1A", "secondaryColor": "#FFF6E5", "tertiaryColor": "#F7F7F7", "lineColor": "#444444", "fontFamily": "arial, sans-serif", "fontSize": "15px", "edgeLabelBackground": "#FFFFFF", "clusterBkg": "#F7F7F7", "clusterBorder": "#9A9A9A", "actorBkg": "#EEF3FB", "actorBorder": "#4C72B0", "actorTextColor": "#1A1A1A", "actorLineColor": "#9A9A9A", "signalColor": "#333333", "signalTextColor": "#1A1A1A", "noteBkgColor": "#F2F2F2", "noteBorderColor": "#9A9A9A", "labelBoxBkgColor": "#F2F2F2", "labelBoxBorderColor": "#9A9A9A", "loopTextColor": "#1A1A1A", "activationBkgColor": "#EEF3FB"}, "flowchart": {"wrappingWidth": 460, "nodeSpacing": 45, "rankSpacing": 60}, "fontFamily": "arial, sans-serif"}}%%
+flowchart TB
+    P1["<b>Phase 1: Requirements Planning</b><br/>• Define assistive goals for visually impaired pedestrians<br/>• Set evaluation criteria (usability and system quality)<br/>• Select low-cost hardware: ESP32-CAM glasses and a smartphone"]
 
-        P1["Phase 1: Requirements Planning\n• Define pedestrian assistive objectives\n• Map ISO/IEC 25010 & WEAR scale metrics\n• Select low-cost, off-the-shelf hardware (ESP32-CAM)"]
+    P2["<b>Phase 2: User Design</b><br/>• Voice-first, accessible app screens<br/>• Large text and high-contrast themes<br/>• Smart-glasses enclosure design"]
 
-        P2["Phase 2: User Design & Rapid Prototyping\n• Figma accessible wireframes & WCAG AAA tokens\n• Parametric CAD box frame & clip modeling\n• Interactive high-contrast UI swatches"]
+    P3["<b>Phase 3: Construction</b><br/>• Flutter app (Buddy) and ESP32-CAM Wi-Fi video stream<br/>• Hazard detection: COCO-pretrained SSD MobileNet and Google ML Kit<br/>• Text reading, face recognition and Buddy assistant (Gemma 2B / Gemini)<br/>• Custom MobileNetV2 classifier trained in parallel (CRISP-DM)"]
 
-        P3["Phase 3: Construction & AI Model Integration\n• 3D printing PLA enclosures & heatsink mounting\n• Flutter core development with Dart Isolates\n• TFLite MobileNetV2 SSD, OCR & Gemma 2B LLM\n• Cloudflare D1/R2 & Firebase synchronization"]
-
-        P4["Phase 4: Cutover & Empirical Evaluation\n• Live walking trials with N=15 visually impaired users\n• Technical evaluations with N=5 expert panel\n• Continuous integration & OTA update release"]
-    end
+    P4["<b>Phase 4: Cutover and Evaluation</b><br/>• End-user testing (n = 15)<br/>• Expert evaluation (n = 5)<br/>• Fixes released as new app versions"]
 
     P1 --> P2
-    P2 <--> P3
-    P3 <--> P4
-    P4 -.->|Iterative Refinements| P2
+    P2 <-->|Iterative prototyping| P3
+    P3 --> P4
+    P4 -.->|Refinements| P2
 ```
 
 ---
@@ -81,13 +78,13 @@ flowchart LR
 - **Figure Title**: *EasyLens Simplified User Journey and System Interaction Flowchart*
 - **Manuscript Page**: 100
 - **PDF Page**: 107
-- **Image Asset**: [fig_3_10_user_journey_flowchart.png](file:///Users/arronkianparejas/easylens/docs/figures/assets/fig_3_10_user_journey_flowchart.png)
+- **Image Asset**: [fig_user_journey_flowchart.png](assets/fig_user_journey_flowchart.png)
 
 ```
 Figure 3.10
 EasyLens Simplified User Journey and System Interaction Flowchart
 
-Note. Figure 3.10 maps the simplified user journey and logical interaction flows within the EasyLens system, illustrating hands-free initiation, real-time edge computer vision analysis, multimodal feedback dispatch, and emergency SOS routing.
+Note. Figure 3.10 shows the simplified user journey in EasyLens: connecting the smart glasses, choosing a feature by voice or touch, and what each feature does, including the Navigation-mode hazard warnings, Buddy's spoken answers, turn-by-turn walking navigation and the Emergency SOS countdown.
 ```
 
 ---
@@ -95,41 +92,60 @@ Note. Figure 3.10 maps the simplified user journey and logical interaction flows
 ### Technical Diagram (Mermaid)
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#EEF3FB", "primaryBorderColor": "#4C72B0", "primaryTextColor": "#1A1A1A", "secondaryColor": "#FFF6E5", "tertiaryColor": "#F7F7F7", "lineColor": "#444444", "fontFamily": "arial, sans-serif", "fontSize": "15px", "edgeLabelBackground": "#FFFFFF", "clusterBkg": "#F7F7F7", "clusterBorder": "#9A9A9A", "actorBkg": "#EEF3FB", "actorBorder": "#4C72B0", "actorTextColor": "#1A1A1A", "actorLineColor": "#9A9A9A", "signalColor": "#333333", "signalTextColor": "#1A1A1A", "noteBkgColor": "#F2F2F2", "noteBorderColor": "#9A9A9A", "labelBoxBkgColor": "#F2F2F2", "labelBoxBorderColor": "#9A9A9A", "loopTextColor": "#1A1A1A", "activationBkgColor": "#EEF3FB"}, "flowchart": {"wrappingWidth": 260, "nodeSpacing": 30, "rankSpacing": 45}, "fontFamily": "arial, sans-serif"}}%%
 flowchart TD
-    START(["User Powers On Smart Glasses & Launches App"]) --> WIFI["Auto-Connect to Wi-Fi AP 'EasyLens-Camera' (192.168.4.1)"]
-    
-    WIFI --> DASH["Main Dashboard Navigation Screen\n(Personalized Time-Aware Greeting & Voice Prompt)"]
+    START(["User turns on the smart glasses and opens Buddy"])
+    WIFI["Join the 'EasyLens-Camera' Wi-Fi in phone settings, then tap Connect<br/>(the phone camera is used if the glasses are not connected)"]
+    DASH["Dashboard: time-of-day greeting and voice prompt"]
+    CHOICE{"User chooses a feature<br/>by voice or touch"}
 
-    DASH --> CHOICE{"User Selects Operational Mode\n(Voice Command or Touch Card)"}
+    CAM["Smart Glasses camera<br/>(Navigation mode)"]
+    OCR["Text Reader"]
+    BUDDY["Talk to Buddy"]
+    NAV["Walking Navigation"]
+    SOS["Emergency SOS"]
 
-    CHOICE -->|Object Detection| OBJ["Active Edge-AI Object Detector\n(Continuous 30 FPS Stream Receiver)"]
-    CHOICE -->|OCR Text Reader| OCR["Nearby Text Scanner\n(Capture Image & ML Kit Extraction)"]
-    CHOICE -->|Local AI Assistant| BUDDY["Talk to Buddy (Gemma-IT 2B / Gemini 3.6)\n(Hands-Free Speech Dialogue & Q&A)"]
-    CHOICE -->|Walking Navigation| NAV["GPS Clock-Face Audio Navigation\n(Turn-by-Turn Spoken Bearings)"]
-    CHOICE -->|Emergency SOS| SOS["Emergency SOS Dispatch Flow\n(5-Second Audible Countdown)"]
+    DETECT["Google ML Kit detects objects and labels each frame"]
+    HAZ{"Obstacle or hazard<br/>in the path?"}
+    STOP["Very close and centered:<br/>'Stop immediately' + strong vibration"]
+    AVOID["Close and centered:<br/>'Obstacle ahead, step to your left/right' + vibration"]
+    WARN["Hazard recognized (e.g., vehicle, stairs, fire):<br/>spoken warning"]
+    CLEAR["Path clear:<br/>no warning"]
+    REPEAT(["Repeat for the next frame"])
 
-    OBJ --> ISOLATE["Dart Parallel Worker Isolate\n(Resize to 300x300 & Normalize Frame)"]
-    ISOLATE --> INFER["MobileNetV2 SSD 24-Class Inference"]
-    
-    INFER --> CHECK_HAZARD{"Obstacle Detected?\n(Score > 0.65)"}
-    
-    CHECK_HAZARD -->|"Critical Threat: Stop, Vehicle, or Wires"| CRIT["Double Haptic Vibration Pulse<br>+ High-Priority Voice Override: STOP! Vehicle Approaching"]
-    CHECK_HAZARD -->|"Moderate Threat: Steps, Pothole, or Pole"| MOD["Single Haptic Vibration Pulse<br>+ Directional Voice Alert: Stairs Ahead at 12 o'clock"]
-    CHECK_HAZARD -->|"No Threat: Clear Path"| CLEAR["Maintain Silent Scanning / Periodic Status Cue"]
+    OCR_OUT["Reads the text aloud<br/>(English / Filipino)"]
+    BUDDY_OUT["Answers by voice:<br/>Gemma 2B on the phone (Local AI mode, default)<br/>or Google Gemini (online mode, and some Filipino questions)"]
+    NAV_OUT["Speaks turn-by-turn steps and<br/>alerts the user near each turn (GPS)"]
 
-    OCR --> OCR_SPEAK["Bilingual Text-to-Speech Reads Detected Text Aloud"]
-    BUDDY --> BUDDY_SPEAK["Spoken Conversational Response Generated Locally"]
-    NAV --> NAV_SPEAK["Spoken Directional Instruction: Head towards 2 o'clock"]
+    COUNT["5-second countdown<br/>(tap Cancel to stop the alert)"]
+    SOS_SEND["SMS with Google Maps location link<br/>sent to emergency contacts"]
 
-    SOS --> COUNTDOWN{"Cancelled within 5 seconds?"}
-    COUNTDOWN -->|"Yes: Tap or Shake"| SOS_CANCEL["Cancel SOS and Announce Cancellation via Voice"]
-    COUNTDOWN -->|"No: Timer Expires"| SOS_FIRE["Dispatch SMS with Real-Time GPS Coordinates<br>+ Upload Snapshot to Cloudflare R2"]
+    START --> WIFI --> DASH --> CHOICE
+    CHOICE --> CAM
+    CHOICE --> OCR
+    CHOICE --> BUDDY
+    CHOICE --> NAV
+    CHOICE --> SOS
 
-    CRIT --> CYCLE(["Loop Continuous Processing"])
-    MOD --> CYCLE
-    CLEAR --> CYCLE
-    OCR_SPEAK --> CYCLE
-    BUDDY_SPEAK --> CYCLE
-    NAV_SPEAK --> CYCLE
-    SOS_FIRE --> END(["Standby / Monitoring State"])
+    CAM --> DETECT --> HAZ
+    HAZ -->|Yes| STOP
+    HAZ -->|Yes| AVOID
+    HAZ -->|Yes| WARN
+    HAZ -->|No| CLEAR
+    STOP --> REPEAT
+    AVOID --> REPEAT
+    WARN --> REPEAT
+    CLEAR --> REPEAT
+
+    OCR --> OCR_OUT
+    BUDDY --> BUDDY_OUT
+    NAV --> NAV_OUT
+
+    SOS --> COUNT
+    COUNT -->|Not cancelled| SOS_SEND
+
+    classDef decision fill:#FFF6E5,stroke:#DD8452,color:#1A1A1A
+    classDef terminal fill:#F2F2F2,stroke:#555555,color:#1A1A1A
+    class CHOICE,HAZ decision
+    class START,REPEAT terminal
 ```
